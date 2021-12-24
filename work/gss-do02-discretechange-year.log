@@ -1,0 +1,4281 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/biancamanago/Dropbox/_AcademicWork/Vault/Research/- PUBLISHE
+> D/GSS-Health Affair Analyses/- posted/Analyses/gss-do02-discretechange-year.lo
+> g
+  log type:  text
+ opened on:  23 Dec 2021, 20:16:43
+
+.  
+.  version 15.1
+
+.  set linesize 80
+
+.  clear all
+
+.  macro drop _all
+
+. 
+.  
+.  local pgm   gss-do02-discretechange-year
+
+.  local dte   2019-08-10
+
+.  local who   bianca manago 
+
+.  local tag   "`pgm'.do `who' `dte'"
+
+.  
+.  di "`tag'"
+gss-do02-discretechange-year.do bianca manago 2019-08-10
+
+.  
+.  use "_data/gss-data03-scales.dta", clear 
+
+. 
+. ***************************************
+. * STEP 1: Analyses        *
+. ***************************************
+. 
+. //label define year alcohol "alcohol dependence" depression "depression" schiz
+> ophrenia "schizophrenia"
+. //label val year year
+. 
+. recode year (2=0 "2018") (0=1 "1996") (1=2 "2006"), gen(year1)
+(3610 differences between year and year1)
+
+. 
+. svyset [pw=wtssall]
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+
+.         
+. ** Hurt Others
+. ** Coefficient Plot     
+.         
+. local depvars "hurtothR hurtselfR"      
+
+. 
+. foreach dv in `depvars' {       
+  2. ** Support doccion
+. ** Coefficient Plot     
+. svyset [pw=wtssall]
+  3. local controls "i.female i.black i.ed_gths c.age"
+  4. local vig      "i.vigmale i.vigrace i.viged"
+  5. local att      "i.mentlillR i.neurob i.stressesR i.wayraiseR i.charactrR"
+  6. local percept  "c.seriousp i.dectreatR i.decmoneyR"
+  7. 
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==1"
+  8.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+  9.         eststo `dv'dt1: margins, at(vigver2=1) dydx(year) post
+ 10.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==2"
+ 11.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+ 12.         eststo `dv'dep1: margins, at(vigver2=2) dydx(year) post
+ 13.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==3"
+ 14.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+ 15.         eststo `dv'alc1: margins, at(vigver2=3) dydx(year) post
+ 16.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==4"
+ 17.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+ 18.         eststo `dv'schiz1: margins, at(vigver2=4) dydx(year) post
+ 19.         }
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =1
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0132081   .0479124    -0.28   0.783    -.1071462      .08073
+     - 2018  |  -.0088739    .051205    -0.17   0.862    -.1092676    .0915198
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =2
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |    .024905   .0406416     0.61   0.540    -.0547779     .104588
+     - 2018  |  -.0299927   .0417186    -0.72   0.472    -.1117872    .0518018
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =3
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0533184   .0438848    -1.21   0.224      -.13936    .0327232
+     - 2018  |  -.0301196   .0480086    -0.63   0.530    -.1242464    .0640072
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =4
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0067025   .0439586     0.15   0.879    -.0794837    .0928888
+     - 2018  |   .0654985      .0488     1.34   0.180    -.0301798    .1611769
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==1
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0066318   .0420888     0.16   0.875    -.0758884     .089152
+     - 2018  |   .0975854   .0434081     2.25   0.025     .0124785    .1826923
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==2
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0159897   .0354037    -0.45   0.652    -.0854029    .0534236
+     - 2018  |   .0718777   .0384409     1.87   0.062    -.0034904    .1472457
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==3
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0003556   .0383322     0.01   0.993    -.0747993    .0755105
+     - 2018  |  -.0846401   .0470782    -1.80   0.072    -.1769428    .0076626
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==4
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0209458   .0454088    -0.46   0.645    -.1099754    .0680838
+     - 2018  |   .0525031   .0487424     1.08   0.281    -.0430624    .1480686
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+. 
+. local depvars "mustmedR mustdocR musthospR"     
+
+. 
+. foreach dv in `depvars' {       
+  2. ** Support doccion
+. ** Coefficient Plot     
+. svyset [pw=wtssall]
+  3. local controls "i.female i.black i.ed_gths c.age"
+  4. local vig      "i.vigmale i.vigrace i.viged"
+  5. local att      "i.mentlillR i.neurob i.stressesR i.wayraiseR i.charactrR"
+  6. local percept  "c.seriousp i.dectreatR i.decmoneyR i.hurtothR i.hurtselfR"
+  7. 
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==1"
+  8.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+  9.         eststo `dv'dt1: margins, at(vigver2=1) dydx(year) post
+ 10.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==2"
+ 11.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+ 12.         eststo `dv'dep1: margins, at(vigver2=2) dydx(year) post
+ 13.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==3"
+ 14.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+ 15.         eststo `dv'alc1: margins, at(vigver2=3) dydx(year) post
+ 16.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==4"
+ 17.         qui svy: logit `dv' i.year i.vigver2 `controls' `vig' `att' `percep
+> t' i.year#i.vigver2, or
+ 18.         eststo `dv'schiz1: margins, at(vigver2=4) dydx(year) post
+ 19.         }
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit mustmedR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==1
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0321794   .0522731     0.62   0.538    -.0703085    .1346673
+     - 2018  |    .086393   .0565177     1.53   0.126     -.024417     .197203
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustmedR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==2
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |    .063099   .0393761     1.60   0.109    -.0141027    .1403007
+     - 2018  |   .0183803   .0415016     0.44   0.658    -.0629887    .0997492
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustmedR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==3
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0449794   .0337466    -1.33   0.183    -.1111437    .0211849
+     - 2018  |    .019784   .0405874     0.49   0.626    -.0597926    .0993605
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustmedR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==4
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0502891   .0397938     1.26   0.206    -.0277316    .1283098
+     - 2018  |   .0142513   .0432829     0.33   0.742    -.0706102    .0991128
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit mustdocR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==1
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0147958    .049545     0.30   0.765    -.0823433    .1119349
+     - 2018  |   .1159915   .0528809     2.19   0.028     .0123121    .2196709
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustdocR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==2
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0805591   .0395205     2.04   0.042     .0030743    .1580438
+     - 2018  |   .0269162   .0410137     0.66   0.512    -.0534963    .1073286
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustdocR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==3
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0040646   .0396782    -0.10   0.918    -.0818585    .0737293
+     - 2018  |   .0173851   .0450987     0.39   0.700    -.0710364    .1058065
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustdocR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR 
+> i.hurtselfR if vigver2==4
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0028157   .0407723     0.07   0.945    -.0771233    .0827548
+     - 2018  |   .0537195   .0465478     1.15   0.249    -.0375431    .1449822
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit musthospR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==1
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0053445   .0532318    -0.10   0.920     -.109712     .099023
+     - 2018  |   .0517766   .0564077     0.92   0.359    -.0588176    .1623708
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit musthospR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==2
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0791037   .0393812     2.01   0.045     .0018921    .1563154
+     - 2018  |   .0027184   .0395771     0.07   0.945    -.0748773    .0803142
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit musthospR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==3
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |  -.0293978   .0379392    -0.77   0.438    -.1037822    .0449867
+     - 2018  |  -.0124543    .042886    -0.29   0.772    -.0965376     .071629
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit musthospR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==4
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year 2.year
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        year |
+     - 2006  |   .0578223   .0394043     1.47   0.142    -.0194348    .1350793
+     - 2018  |   .1402368   .0461149     3.04   0.002     .0498228    .2306507
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+.         
+.         coefplot(hurtothRdt1, label("daily troubles") mc(midgreen))           
+>    ///
+>                         (hurtothRdep1, label("depression") mc(blue))          
+>            ///
+>                         (hurtothRalc1, label("alcohol dependence") mc(gs0) msy
+> m(d))      ///
+>                         (hurtothRschiz1, label("schizophrenia") mc(cranberry))
+>            ///
+>                         , bylabel("A: Likely to Hurt Others")                 
+>               ///
+>                         || (hurtselfRdt1, label("daily troubles") mc(midgreen)
+> )          ///
+>                         (hurtselfRdep1, label("depression") mc(blue))         
+>            ///
+>                         (hurtselfRalc1, label("alcohol dependence") mc(gs0) ms
+> ym(d))     ///
+>                         (hurtselfRschiz1, label("schizophrenia") mc(cranberry)
+> )          ///
+>                         , bylabel("B: Likely to Hurt Self")                   
+>                                            ///
+>                         || (mustmedRdt1, label("daily troubles") mc(midgreen))
+>            ///
+>                 (mustmedRdep1, label("depression") mc(blue))                  
+>    ///
+>                 (mustmedRalc1, label("alcohol dependence") mc(gs0) msym(d))   
+>    ///
+>                         (mustmedRschiz1, label("schizophrenia") mc(cranberry))
+>            ///
+>                         , bylabel("C: Coercion to take Medication")           
+>                                    ///    
+>                         ||  (mustdocRdt1, label("daily troubles") mc(midgreen)
+> )          ///
+>                         (mustdocRdep1, label("depression") mc(blue))          
+>            ///
+>                 (mustdocRalc1, label("alcohol dependence") mc(gs0) msym(d))   
+>    ///
+>                         (mustdocRschiz1, label("schizophrenia") mc(cranberry))
+>            ///
+>                         , bylabel("D: Coercion to see MD")                    
+>               /// 
+>                         || (musthospRdt1, label("daily troubles") mc(midgreen)
+> )          ///
+>                         (musthospRdep1, label("depression") mc(blue))         
+>            ///
+>                 (musthospRalc1, label("alcohol dependence") mc(gs0) msym(d))  
+>    ///
+>                         (musthospRschiz1, label("schizophrenia") mc(cranberry)
+> )          ///
+>                         , bylabel("E: Coercion to be Hospitalized")           
+>               ///
+>                         || , drop(1.female 1.black 1.ed_gths age 1.vigmale    
+>            ///
+>                          1.vigrace 2.vigrace 1.viged 2.viged 1.neurob 1.mentli
+> llR        ///
+>                          1.vigver2 2.vigver2 3.vigver2 4.vigver2              
+>            ///
+>                          1.stressesR 1.wayraiseR 1.charactrR seriousp         
+>            ///
+>                          1.dectreatR 1.decmoneyR)  horizontal xline(0) recast(
+> scatter)   ///
+>                          xline(0) xlab(-.5(.1).5) ciop(col(gs12)) ysize(14) xs
+> ize(9)     ///
+>                          legend(order(2 4 6 8) row(1) margin(none))           
+>                ///
+>                          subtitle(, size(medsmall) margin(tiny) justification(
+> left)      ///
+>              color(white) bcolor(black))                                     /
+> //
+>                          byopts(compact cols(1)) ///
+>                          name(a32)                               
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+
+.                          
+. 
+.         graph combine a32, xsize(15) ysize(20) imargin(tiny) ///
+>          title("Exhibit 2. Marginal effects of mental disorders on perceived p
+> otential" ///
+>                "for violence and endorsement of coerced treatment," ///
+>                    "2006 and 2018 vs. 1996", size(medsmall)) ///
+>          note("NOTE: Adjusted average marginal effect in predicted probability
+>  of dependent variable in the years listed"  ///
+>               "on the side compared to omitted year. Positive values indicate 
+> an outcome was more likely for each" ///
+>                   "year compared to omitted, negative values indicate the reve
+> rse. Lines indicate 95% confidence interval" ///
+>                   "around the average marginal effect. Values are derived from
+>  logistic regression in Appendix Exhibit A3," ///
+>                   "available online." ///
+>                   "SOURCE: Authors’ analysis of data from the National Stigma 
+> Studies, 1996, 2006, and 2018.", size(vsmall) ///
+>                   justification(left))
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+
+.         
+. 
+. graph export "-graphs/gss-do02-Exhibit2-note.tif", replace
+file /Users/biancamanago/Dropbox/_AcademicWork/Vault/Research/-
+    PUBLISHED/GSS-Health Affair Analyses/-
+    posted/Analyses/-graphs/gss-do02-Exhibit2-note.tif saved as TIFF format
+
+.  
+.                          
+. 
+. **********
+. ///
+> **********
+.         
+. local depvars "hurtothR hurtselfR"      
+
+. 
+. foreach dv in `depvars' {       
+  2. ** Support doccion
+. ** Coefficient Plot     
+. svyset [pw=wtssall]
+  3. local controls "i.female i.black i.ed_gths c.age"
+  4. local vig      "i.vigmale i.vigrace i.viged"
+  5. local att      "i.mentlillR i.neurob i.stressesR i.wayraiseR i.charactrR"
+  6. local percept  "c.seriousp i.dectreatR i.decmoneyR"
+  7. 
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==1"
+  8.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+  9.         eststo `dv'dt2: margins, at(vigver2=1) dydx(year1) post
+ 10.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==2"
+ 11.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+ 12.         eststo `dv'dep2: margins, at(vigver2=2) dydx(year1) post
+ 13.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==3"
+ 14.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+ 15.         eststo `dv'alc2: margins, at(vigver2=3) dydx(year1) post
+ 16.         
+.         di in red "logit `dv' i.year `controls' `att' `percept' if vigver2==4"
+ 17.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+ 18.         eststo `dv'schiz2: margins, at(vigver2=4) dydx(year1) post
+ 19.         }               
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =1
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.38
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     hurtothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   1.048146    .284584     0.17   0.863     .6155066    1.784887
+        2006  |   .9770904   .2665623    -0.08   0.932     .5723192    1.668135
+              |
+      vigver2 |
+ - Depress..  |   .9825494   .2752727    -0.06   0.950     .5672834    1.701801
+ - Alcohol..  |   4.727679   1.422796     5.16   0.000      2.62055    8.529104
+ - Schizop..  |   3.950015   1.210522     4.48   0.000     2.165966    7.203535
+ - Drug Pr..  |   2.663626   .8231269     3.17   0.002     1.453256    4.882072
+              |
+       female |
+    - Female  |    1.07135   .0993799     0.74   0.458     .8931945     1.28504
+              |
+        black |
+       black  |   1.337431   .1883534     2.06   0.039     1.014739     1.76274
+              |
+      ed_gths |
+ - Greater..  |   .6047827   .0588577    -5.17   0.000     .4997264    .7319248
+          age |   .9971185   .0026418    -1.09   0.276     .9919523    1.002312
+              |
+      vigmale |
+      - Male  |   1.840292   .1673136     6.71   0.000     1.539827    2.199385
+              |
+      vigrace |
+     - Black  |   .9918809   .1075954    -0.08   0.940     .8018506    1.226947
+  - Hispanic  |   .9599594   .1076122    -0.36   0.715     .7705493    1.195929
+              |
+        viged |
+ - High Sc..  |   .9624953   .1059054    -0.35   0.728     .7757247    1.194234
+   - College  |   .8645187   .0959369    -1.31   0.190     .6954783    1.074645
+              |
+    mentlillR |
+ - Mental ..  |   1.113085   .2281514     0.52   0.601     .7447266    1.663641
+              |
+       neurob |
+ - Neurobi..  |   1.415607   .2873305     1.71   0.087      .950853    2.107522
+              |
+    stressesR |
+ - Caused ..  |   1.103625   .1699103     0.64   0.522     .8160733    1.492497
+              |
+    wayraiseR |
+ - Way x w..  |   1.254222   .1233918     2.30   0.021     1.034199    1.521054
+              |
+    charactrR |
+ - Bad cha..  |   2.097831   .2083887     7.46   0.000     1.726584    2.548903
+     seriousp |    1.55043   .1386862     4.90   0.000     1.301028    1.847643
+              |
+    dectreatR |
+ - Treatme..  |    .756376    .088976    -2.37   0.018     .6005833    .9525817
+              |
+    decmoneyR |
+ - Financi..  |   .6405268   .0764098    -3.73   0.000     .5069458    .8093065
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.116807   .3885859     0.32   0.751     .5645579    2.209266
+        1996 #|
+ - Alcohol..  |   1.118072   .4155416     0.30   0.764     .5395185    2.317037
+        1996 #|
+ - Schizop..  |   .6923437    .250536    -1.02   0.310     .3405625    1.407494
+        1996 #|
+ - Drug Pr..  |   4.422083   1.728479     3.80   0.000     2.054955    9.515938
+        2006 #|
+ - Depress..  |   1.359926   .4678079     0.89   0.372     .6927999    2.669457
+        2006 #|
+ - Alcohol..  |    .909036    .334897    -0.26   0.796     .4414539    1.871875
+        2006 #|
+ - Schizop..  |   .7670981   .2781021    -0.73   0.465     .3768377     1.56152
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0639652   .0253512    -6.94   0.000     .0294086    .1391274
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   .0088739    .051205     0.17   0.862    -.0915198    .1092676
+       2006  |  -.0043342   .0510418    -0.08   0.932    -.1044079    .0957394
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =2
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.38
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     hurtothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   1.048146    .284584     0.17   0.863     .6155066    1.784887
+        2006  |   .9770904   .2665623    -0.08   0.932     .5723192    1.668135
+              |
+      vigver2 |
+ - Depress..  |   .9825494   .2752727    -0.06   0.950     .5672834    1.701801
+ - Alcohol..  |   4.727679   1.422796     5.16   0.000      2.62055    8.529104
+ - Schizop..  |   3.950015   1.210522     4.48   0.000     2.165966    7.203535
+ - Drug Pr..  |   2.663626   .8231269     3.17   0.002     1.453256    4.882072
+              |
+       female |
+    - Female  |    1.07135   .0993799     0.74   0.458     .8931945     1.28504
+              |
+        black |
+       black  |   1.337431   .1883534     2.06   0.039     1.014739     1.76274
+              |
+      ed_gths |
+ - Greater..  |   .6047827   .0588577    -5.17   0.000     .4997264    .7319248
+          age |   .9971185   .0026418    -1.09   0.276     .9919523    1.002312
+              |
+      vigmale |
+      - Male  |   1.840292   .1673136     6.71   0.000     1.539827    2.199385
+              |
+      vigrace |
+     - Black  |   .9918809   .1075954    -0.08   0.940     .8018506    1.226947
+  - Hispanic  |   .9599594   .1076122    -0.36   0.715     .7705493    1.195929
+              |
+        viged |
+ - High Sc..  |   .9624953   .1059054    -0.35   0.728     .7757247    1.194234
+   - College  |   .8645187   .0959369    -1.31   0.190     .6954783    1.074645
+              |
+    mentlillR |
+ - Mental ..  |   1.113085   .2281514     0.52   0.601     .7447266    1.663641
+              |
+       neurob |
+ - Neurobi..  |   1.415607   .2873305     1.71   0.087      .950853    2.107522
+              |
+    stressesR |
+ - Caused ..  |   1.103625   .1699103     0.64   0.522     .8160733    1.492497
+              |
+    wayraiseR |
+ - Way x w..  |   1.254222   .1233918     2.30   0.021     1.034199    1.521054
+              |
+    charactrR |
+ - Bad cha..  |   2.097831   .2083887     7.46   0.000     1.726584    2.548903
+     seriousp |    1.55043   .1386862     4.90   0.000     1.301028    1.847643
+              |
+    dectreatR |
+ - Treatme..  |    .756376    .088976    -2.37   0.018     .6005833    .9525817
+              |
+    decmoneyR |
+ - Financi..  |   .6405268   .0764098    -3.73   0.000     .5069458    .8093065
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.116807   .3885859     0.32   0.751     .5645579    2.209266
+        1996 #|
+ - Alcohol..  |   1.118072   .4155416     0.30   0.764     .5395185    2.317037
+        1996 #|
+ - Schizop..  |   .6923437    .250536    -1.02   0.310     .3405625    1.407494
+        1996 #|
+ - Drug Pr..  |   4.422083   1.728479     3.80   0.000     2.054955    9.515938
+        2006 #|
+ - Depress..  |   1.359926   .4678079     0.89   0.372     .6927999    2.669457
+        2006 #|
+ - Alcohol..  |    .909036    .334897    -0.26   0.796     .4414539    1.871875
+        2006 #|
+ - Schizop..  |   .7670981   .2781021    -0.73   0.465     .3768377     1.56152
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0639652   .0253512    -6.94   0.000     .0294086    .1391274
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   .0299927   .0417186     0.72   0.472    -.0518018    .1117872
+       2006  |   .0548977   .0401448     1.37   0.172    -.0238111    .1336066
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =3
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.38
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     hurtothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   1.048146    .284584     0.17   0.863     .6155066    1.784887
+        2006  |   .9770904   .2665623    -0.08   0.932     .5723192    1.668135
+              |
+      vigver2 |
+ - Depress..  |   .9825494   .2752727    -0.06   0.950     .5672834    1.701801
+ - Alcohol..  |   4.727679   1.422796     5.16   0.000      2.62055    8.529104
+ - Schizop..  |   3.950015   1.210522     4.48   0.000     2.165966    7.203535
+ - Drug Pr..  |   2.663626   .8231269     3.17   0.002     1.453256    4.882072
+              |
+       female |
+    - Female  |    1.07135   .0993799     0.74   0.458     .8931945     1.28504
+              |
+        black |
+       black  |   1.337431   .1883534     2.06   0.039     1.014739     1.76274
+              |
+      ed_gths |
+ - Greater..  |   .6047827   .0588577    -5.17   0.000     .4997264    .7319248
+          age |   .9971185   .0026418    -1.09   0.276     .9919523    1.002312
+              |
+      vigmale |
+      - Male  |   1.840292   .1673136     6.71   0.000     1.539827    2.199385
+              |
+      vigrace |
+     - Black  |   .9918809   .1075954    -0.08   0.940     .8018506    1.226947
+  - Hispanic  |   .9599594   .1076122    -0.36   0.715     .7705493    1.195929
+              |
+        viged |
+ - High Sc..  |   .9624953   .1059054    -0.35   0.728     .7757247    1.194234
+   - College  |   .8645187   .0959369    -1.31   0.190     .6954783    1.074645
+              |
+    mentlillR |
+ - Mental ..  |   1.113085   .2281514     0.52   0.601     .7447266    1.663641
+              |
+       neurob |
+ - Neurobi..  |   1.415607   .2873305     1.71   0.087      .950853    2.107522
+              |
+    stressesR |
+ - Caused ..  |   1.103625   .1699103     0.64   0.522     .8160733    1.492497
+              |
+    wayraiseR |
+ - Way x w..  |   1.254222   .1233918     2.30   0.021     1.034199    1.521054
+              |
+    charactrR |
+ - Bad cha..  |   2.097831   .2083887     7.46   0.000     1.726584    2.548903
+     seriousp |    1.55043   .1386862     4.90   0.000     1.301028    1.847643
+              |
+    dectreatR |
+ - Treatme..  |    .756376    .088976    -2.37   0.018     .6005833    .9525817
+              |
+    decmoneyR |
+ - Financi..  |   .6405268   .0764098    -3.73   0.000     .5069458    .8093065
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.116807   .3885859     0.32   0.751     .5645579    2.209266
+        1996 #|
+ - Alcohol..  |   1.118072   .4155416     0.30   0.764     .5395185    2.317037
+        1996 #|
+ - Schizop..  |   .6923437    .250536    -1.02   0.310     .3405625    1.407494
+        1996 #|
+ - Drug Pr..  |   4.422083   1.728479     3.80   0.000     2.054955    9.515938
+        2006 #|
+ - Depress..  |   1.359926   .4678079     0.89   0.372     .6927999    2.669457
+        2006 #|
+ - Alcohol..  |    .909036    .334897    -0.26   0.796     .4414539    1.871875
+        2006 #|
+ - Schizop..  |   .7670981   .2781021    -0.73   0.465     .3768377     1.56152
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0639652   .0253512    -6.94   0.000     .0294086    .1391274
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   .0301196   .0480086     0.63   0.530    -.0640072    .1242464
+       2006  |  -.0231988   .0485151    -0.48   0.633    -.1183186     .071921
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtothR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.st
+> ressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2=
+> =4
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.38
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     hurtothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   1.048146    .284584     0.17   0.863     .6155066    1.784887
+        2006  |   .9770904   .2665623    -0.08   0.932     .5723192    1.668135
+              |
+      vigver2 |
+ - Depress..  |   .9825494   .2752727    -0.06   0.950     .5672834    1.701801
+ - Alcohol..  |   4.727679   1.422796     5.16   0.000      2.62055    8.529104
+ - Schizop..  |   3.950015   1.210522     4.48   0.000     2.165966    7.203535
+ - Drug Pr..  |   2.663626   .8231269     3.17   0.002     1.453256    4.882072
+              |
+       female |
+    - Female  |    1.07135   .0993799     0.74   0.458     .8931945     1.28504
+              |
+        black |
+       black  |   1.337431   .1883534     2.06   0.039     1.014739     1.76274
+              |
+      ed_gths |
+ - Greater..  |   .6047827   .0588577    -5.17   0.000     .4997264    .7319248
+          age |   .9971185   .0026418    -1.09   0.276     .9919523    1.002312
+              |
+      vigmale |
+      - Male  |   1.840292   .1673136     6.71   0.000     1.539827    2.199385
+              |
+      vigrace |
+     - Black  |   .9918809   .1075954    -0.08   0.940     .8018506    1.226947
+  - Hispanic  |   .9599594   .1076122    -0.36   0.715     .7705493    1.195929
+              |
+        viged |
+ - High Sc..  |   .9624953   .1059054    -0.35   0.728     .7757247    1.194234
+   - College  |   .8645187   .0959369    -1.31   0.190     .6954783    1.074645
+              |
+    mentlillR |
+ - Mental ..  |   1.113085   .2281514     0.52   0.601     .7447266    1.663641
+              |
+       neurob |
+ - Neurobi..  |   1.415607   .2873305     1.71   0.087      .950853    2.107522
+              |
+    stressesR |
+ - Caused ..  |   1.103625   .1699103     0.64   0.522     .8160733    1.492497
+              |
+    wayraiseR |
+ - Way x w..  |   1.254222   .1233918     2.30   0.021     1.034199    1.521054
+              |
+    charactrR |
+ - Bad cha..  |   2.097831   .2083887     7.46   0.000     1.726584    2.548903
+     seriousp |    1.55043   .1386862     4.90   0.000     1.301028    1.847643
+              |
+    dectreatR |
+ - Treatme..  |    .756376    .088976    -2.37   0.018     .6005833    .9525817
+              |
+    decmoneyR |
+ - Financi..  |   .6405268   .0764098    -3.73   0.000     .5069458    .8093065
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.116807   .3885859     0.32   0.751     .5645579    2.209266
+        1996 #|
+ - Alcohol..  |   1.118072   .4155416     0.30   0.764     .5395185    2.317037
+        1996 #|
+ - Schizop..  |   .6923437    .250536    -1.02   0.310     .3405625    1.407494
+        1996 #|
+ - Drug Pr..  |   4.422083   1.728479     3.80   0.000     2.054955    9.515938
+        2006 #|
+ - Depress..  |   1.359926   .4678079     0.89   0.372     .6927999    2.669457
+        2006 #|
+ - Alcohol..  |    .909036    .334897    -0.26   0.796     .4414539    1.871875
+        2006 #|
+ - Schizop..  |   .7670981   .2781021    -0.73   0.465     .3768377     1.56152
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0639652   .0253512    -6.94   0.000     .0294086    .1391274
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0654985      .0488    -1.34   0.180    -.1611769    .0301798
+       2006  |   -.058796   .0482099    -1.22   0.223    -.1533174    .0357254
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==1
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.47
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    hurtselfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .5770553   .1417599    -2.24   0.025     .3564841    .9341029
+        2006  |   .5980811    .142559    -2.16   0.031     .3747993    .9543799
+              |
+      vigver2 |
+ - Depress..  |   2.610487   .7805533     3.21   0.001     1.452516    4.691613
+ - Alcohol..  |   1.052589   .3128369     0.17   0.863     .5877476    1.885068
+ - Schizop..  |   2.686183   1.027674     2.58   0.010     1.268748    5.687166
+ - Drug Pr..  |   1.528048   .4721112     1.37   0.170     .8337929    2.800372
+              |
+       female |
+    - Female  |   1.255218   .1373838     2.08   0.038       1.0128     1.55566
+              |
+        black |
+       black  |   1.130609   .1788534     0.78   0.438     .8291136     1.54174
+              |
+      ed_gths |
+ - Greater..  |   .6073983   .0693276    -4.37   0.000     .4856081    .7597333
+          age |    .990316   .0032042    -3.01   0.003     .9840537    .9966182
+              |
+      vigmale |
+      - Male  |   1.020581   .1103187     0.19   0.851     .8256708    1.261503
+              |
+      vigrace |
+     - Black  |   1.021866   .1290722     0.17   0.864     .7977047    1.309018
+  - Hispanic  |   1.019396   .1326984     0.15   0.883     .7897722    1.315783
+              |
+        viged |
+ - High Sc..  |   1.043726   .1352097     0.33   0.741     .8096183    1.345528
+   - College  |   .9469879   .1262393    -0.41   0.683     .7291819    1.229852
+              |
+    mentlillR |
+ - Mental ..  |   1.538395   .4067795     1.63   0.103     .9160499    2.583549
+              |
+       neurob |
+ - Neurobi..  |   1.651635   .4389193     1.89   0.059     .9809174    2.780965
+              |
+    stressesR |
+ - Caused ..  |   1.188126   .2097694     0.98   0.329     .8404813    1.679565
+              |
+    wayraiseR |
+ - Way x w..  |   1.099588   .1259441     0.83   0.407     .8784205     1.37644
+              |
+    charactrR |
+ - Bad cha..  |   1.492977   .1825345     3.28   0.001     1.174758    1.897395
+     seriousp |   2.156875   .1815138     9.13   0.000     1.828804    2.543799
+              |
+    dectreatR |
+ - Treatme..  |   .6410531   .0929782    -3.07   0.002     .4823857    .8519097
+              |
+    decmoneyR |
+ - Financi..  |   .5978395   .0880112    -3.49   0.000     .4479531    .7978785
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.019869   .3809592     0.05   0.958     .4903224    2.121323
+        1996 #|
+ - Alcohol..  |   3.011338   1.167665     2.84   0.004     1.407958    6.440643
+        1996 #|
+ - Schizop..  |   1.160627   .5247024     0.33   0.742      .478352    2.816033
+        1996 #|
+ - Drug Pr..  |   4.378407   1.870764     3.46   0.001     1.894526    10.11886
+        2006 #|
+ - Depress..  |   .8851758   .3188506    -0.34   0.735     .4368313    1.793681
+        2006 #|
+ - Alcohol..  |   2.912861   1.105148     2.82   0.005     1.384403    6.128819
+        2006 #|
+ - Schizop..  |   .9686649   .4418855    -0.07   0.944     .3960426    2.369219
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .1816637    .074682    -4.15   0.000     .0811374    .4067385
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0975854   .0434081    -2.25   0.025    -.1826923   -.0124785
+       2006  |  -.0909536   .0418858    -2.17   0.030     -.173076   -.0088313
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==2
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.47
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    hurtselfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .5770553   .1417599    -2.24   0.025     .3564841    .9341029
+        2006  |   .5980811    .142559    -2.16   0.031     .3747993    .9543799
+              |
+      vigver2 |
+ - Depress..  |   2.610487   .7805533     3.21   0.001     1.452516    4.691613
+ - Alcohol..  |   1.052589   .3128369     0.17   0.863     .5877476    1.885068
+ - Schizop..  |   2.686183   1.027674     2.58   0.010     1.268748    5.687166
+ - Drug Pr..  |   1.528048   .4721112     1.37   0.170     .8337929    2.800372
+              |
+       female |
+    - Female  |   1.255218   .1373838     2.08   0.038       1.0128     1.55566
+              |
+        black |
+       black  |   1.130609   .1788534     0.78   0.438     .8291136     1.54174
+              |
+      ed_gths |
+ - Greater..  |   .6073983   .0693276    -4.37   0.000     .4856081    .7597333
+          age |    .990316   .0032042    -3.01   0.003     .9840537    .9966182
+              |
+      vigmale |
+      - Male  |   1.020581   .1103187     0.19   0.851     .8256708    1.261503
+              |
+      vigrace |
+     - Black  |   1.021866   .1290722     0.17   0.864     .7977047    1.309018
+  - Hispanic  |   1.019396   .1326984     0.15   0.883     .7897722    1.315783
+              |
+        viged |
+ - High Sc..  |   1.043726   .1352097     0.33   0.741     .8096183    1.345528
+   - College  |   .9469879   .1262393    -0.41   0.683     .7291819    1.229852
+              |
+    mentlillR |
+ - Mental ..  |   1.538395   .4067795     1.63   0.103     .9160499    2.583549
+              |
+       neurob |
+ - Neurobi..  |   1.651635   .4389193     1.89   0.059     .9809174    2.780965
+              |
+    stressesR |
+ - Caused ..  |   1.188126   .2097694     0.98   0.329     .8404813    1.679565
+              |
+    wayraiseR |
+ - Way x w..  |   1.099588   .1259441     0.83   0.407     .8784205     1.37644
+              |
+    charactrR |
+ - Bad cha..  |   1.492977   .1825345     3.28   0.001     1.174758    1.897395
+     seriousp |   2.156875   .1815138     9.13   0.000     1.828804    2.543799
+              |
+    dectreatR |
+ - Treatme..  |   .6410531   .0929782    -3.07   0.002     .4823857    .8519097
+              |
+    decmoneyR |
+ - Financi..  |   .5978395   .0880112    -3.49   0.000     .4479531    .7978785
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.019869   .3809592     0.05   0.958     .4903224    2.121323
+        1996 #|
+ - Alcohol..  |   3.011338   1.167665     2.84   0.004     1.407958    6.440643
+        1996 #|
+ - Schizop..  |   1.160627   .5247024     0.33   0.742      .478352    2.816033
+        1996 #|
+ - Drug Pr..  |   4.378407   1.870764     3.46   0.001     1.894526    10.11886
+        2006 #|
+ - Depress..  |   .8851758   .3188506    -0.34   0.735     .4368313    1.793681
+        2006 #|
+ - Alcohol..  |   2.912861   1.105148     2.82   0.005     1.384403    6.128819
+        2006 #|
+ - Schizop..  |   .9686649   .4418855    -0.07   0.944     .3960426    2.369219
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .1816637    .074682    -4.15   0.000     .0811374    .4067385
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0718777   .0384409    -1.87   0.062    -.1472457    .0034904
+       2006  |  -.0878673   .0362153    -2.43   0.015    -.1588719   -.0168628
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==3
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.47
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    hurtselfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .5770553   .1417599    -2.24   0.025     .3564841    .9341029
+        2006  |   .5980811    .142559    -2.16   0.031     .3747993    .9543799
+              |
+      vigver2 |
+ - Depress..  |   2.610487   .7805533     3.21   0.001     1.452516    4.691613
+ - Alcohol..  |   1.052589   .3128369     0.17   0.863     .5877476    1.885068
+ - Schizop..  |   2.686183   1.027674     2.58   0.010     1.268748    5.687166
+ - Drug Pr..  |   1.528048   .4721112     1.37   0.170     .8337929    2.800372
+              |
+       female |
+    - Female  |   1.255218   .1373838     2.08   0.038       1.0128     1.55566
+              |
+        black |
+       black  |   1.130609   .1788534     0.78   0.438     .8291136     1.54174
+              |
+      ed_gths |
+ - Greater..  |   .6073983   .0693276    -4.37   0.000     .4856081    .7597333
+          age |    .990316   .0032042    -3.01   0.003     .9840537    .9966182
+              |
+      vigmale |
+      - Male  |   1.020581   .1103187     0.19   0.851     .8256708    1.261503
+              |
+      vigrace |
+     - Black  |   1.021866   .1290722     0.17   0.864     .7977047    1.309018
+  - Hispanic  |   1.019396   .1326984     0.15   0.883     .7897722    1.315783
+              |
+        viged |
+ - High Sc..  |   1.043726   .1352097     0.33   0.741     .8096183    1.345528
+   - College  |   .9469879   .1262393    -0.41   0.683     .7291819    1.229852
+              |
+    mentlillR |
+ - Mental ..  |   1.538395   .4067795     1.63   0.103     .9160499    2.583549
+              |
+       neurob |
+ - Neurobi..  |   1.651635   .4389193     1.89   0.059     .9809174    2.780965
+              |
+    stressesR |
+ - Caused ..  |   1.188126   .2097694     0.98   0.329     .8404813    1.679565
+              |
+    wayraiseR |
+ - Way x w..  |   1.099588   .1259441     0.83   0.407     .8784205     1.37644
+              |
+    charactrR |
+ - Bad cha..  |   1.492977   .1825345     3.28   0.001     1.174758    1.897395
+     seriousp |   2.156875   .1815138     9.13   0.000     1.828804    2.543799
+              |
+    dectreatR |
+ - Treatme..  |   .6410531   .0929782    -3.07   0.002     .4823857    .8519097
+              |
+    decmoneyR |
+ - Financi..  |   .5978395   .0880112    -3.49   0.000     .4479531    .7978785
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.019869   .3809592     0.05   0.958     .4903224    2.121323
+        1996 #|
+ - Alcohol..  |   3.011338   1.167665     2.84   0.004     1.407958    6.440643
+        1996 #|
+ - Schizop..  |   1.160627   .5247024     0.33   0.742      .478352    2.816033
+        1996 #|
+ - Drug Pr..  |   4.378407   1.870764     3.46   0.001     1.894526    10.11886
+        2006 #|
+ - Depress..  |   .8851758   .3188506    -0.34   0.735     .4368313    1.793681
+        2006 #|
+ - Alcohol..  |   2.912861   1.105148     2.82   0.005     1.384403    6.128819
+        2006 #|
+ - Schizop..  |   .9686649   .4418855    -0.07   0.944     .3960426    2.369219
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .1816637    .074682    -4.15   0.000     .0811374    .4067385
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   .0846401   .0470782     1.80   0.072    -.0076626    .1769428
+       2006  |   .0849957   .0465216     1.83   0.068    -.0062155     .176207
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit hurtselfR i.year i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR if vigver2
+> ==4
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(30, 3571)     =      24.47
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    hurtselfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .5770553   .1417599    -2.24   0.025     .3564841    .9341029
+        2006  |   .5980811    .142559    -2.16   0.031     .3747993    .9543799
+              |
+      vigver2 |
+ - Depress..  |   2.610487   .7805533     3.21   0.001     1.452516    4.691613
+ - Alcohol..  |   1.052589   .3128369     0.17   0.863     .5877476    1.885068
+ - Schizop..  |   2.686183   1.027674     2.58   0.010     1.268748    5.687166
+ - Drug Pr..  |   1.528048   .4721112     1.37   0.170     .8337929    2.800372
+              |
+       female |
+    - Female  |   1.255218   .1373838     2.08   0.038       1.0128     1.55566
+              |
+        black |
+       black  |   1.130609   .1788534     0.78   0.438     .8291136     1.54174
+              |
+      ed_gths |
+ - Greater..  |   .6073983   .0693276    -4.37   0.000     .4856081    .7597333
+          age |    .990316   .0032042    -3.01   0.003     .9840537    .9966182
+              |
+      vigmale |
+      - Male  |   1.020581   .1103187     0.19   0.851     .8256708    1.261503
+              |
+      vigrace |
+     - Black  |   1.021866   .1290722     0.17   0.864     .7977047    1.309018
+  - Hispanic  |   1.019396   .1326984     0.15   0.883     .7897722    1.315783
+              |
+        viged |
+ - High Sc..  |   1.043726   .1352097     0.33   0.741     .8096183    1.345528
+   - College  |   .9469879   .1262393    -0.41   0.683     .7291819    1.229852
+              |
+    mentlillR |
+ - Mental ..  |   1.538395   .4067795     1.63   0.103     .9160499    2.583549
+              |
+       neurob |
+ - Neurobi..  |   1.651635   .4389193     1.89   0.059     .9809174    2.780965
+              |
+    stressesR |
+ - Caused ..  |   1.188126   .2097694     0.98   0.329     .8404813    1.679565
+              |
+    wayraiseR |
+ - Way x w..  |   1.099588   .1259441     0.83   0.407     .8784205     1.37644
+              |
+    charactrR |
+ - Bad cha..  |   1.492977   .1825345     3.28   0.001     1.174758    1.897395
+     seriousp |   2.156875   .1815138     9.13   0.000     1.828804    2.543799
+              |
+    dectreatR |
+ - Treatme..  |   .6410531   .0929782    -3.07   0.002     .4823857    .8519097
+              |
+    decmoneyR |
+ - Financi..  |   .5978395   .0880112    -3.49   0.000     .4479531    .7978785
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.019869   .3809592     0.05   0.958     .4903224    2.121323
+        1996 #|
+ - Alcohol..  |   3.011338   1.167665     2.84   0.004     1.407958    6.440643
+        1996 #|
+ - Schizop..  |   1.160627   .5247024     0.33   0.742      .478352    2.816033
+        1996 #|
+ - Drug Pr..  |   4.378407   1.870764     3.46   0.001     1.894526    10.11886
+        2006 #|
+ - Depress..  |   .8851758   .3188506    -0.34   0.735     .4368313    1.793681
+        2006 #|
+ - Alcohol..  |   2.912861   1.105148     2.82   0.005     1.384403    6.128819
+        2006 #|
+ - Schizop..  |   .9686649   .4418855    -0.07   0.944     .3960426    2.369219
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .1816637    .074682    -4.15   0.000     .0811374    .4067385
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(hurtselfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0525031   .0487424    -1.08   0.281    -.1480686    .0430624
+       2006  |  -.0734489   .0507793    -1.45   0.148    -.1730079    .0261101
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+.         
+. local depvars "mustmedR mustdocR musthospR dangrothR dangrslfR"         
+
+. 
+. foreach dv in `depvars' {       
+  2. ** Support doccion
+. ** Coefficient Plot     
+. svyset [pw=wtssall]
+  3. local controls "i.female i.black i.ed_gths c.age"
+  4. local vig      "i.vigmale i.vigrace i.viged"
+  5. local att      "i.mentlillR i.neurob i.stressesR i.wayraiseR i.charactrR"
+  6. local percept  "c.seriousp i.dectreatR i.decmoneyR i.hurtothR i.hurtselfR"
+  7. 
+.         di in red "logit `dv' i.year1 `controls' `att' `percept' if vigver2==1
+> "
+  8.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+  9.         eststo `dv'dt2: margins, at(vigver2=1) dydx(year1) post
+ 10.         
+.         di in red "logit `dv' i.year1 `controls' `att' `percept' if vigver2==2
+> "
+ 11.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+ 12.         eststo `dv'dep2: margins, at(vigver2=2) dydx(year1) post
+ 13.         
+.         di in red "logit `dv' i.year1 `controls' `att' `percept' if vigver2==3
+> "
+ 14.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+ 15.         eststo `dv'alc2: margins, at(vigver2=3) dydx(year1) post
+ 16.         
+.         di in red "logit `dv' i.year1 `controls' `att' `percept' if vigver2==4
+> "
+ 17.         svy: logit `dv' i.year1 i.vigver2 `controls' `vig' `att' `percept' 
+> i.year1#i.vigver2, or
+ 18.         eststo `dv'schiz2: margins, at(vigver2=4) dydx(year1) post
+ 19.         }
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit mustmedR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==1
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      12.35
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustmedR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .6180106   .1967537    -1.51   0.131     .3310633    1.153668
+        2006  |   .7453353   .2096209    -1.05   0.296     .4294138    1.293681
+              |
+      vigver2 |
+ - Depress..  |   .6424487   .1879384    -1.51   0.130     .3620336    1.140061
+ - Alcohol..  |   .5223345   .1626167    -2.09   0.037     .2836989    .9617001
+ - Schizop..  |    .977423   .3041707    -0.07   0.942     .5310098     1.79913
+ - Drug Pr..  |   .4414844   .1375852    -2.62   0.009     .2396381    .8133453
+              |
+       female |
+    - Female  |   .9856231    .094273    -0.15   0.880     .8170858    1.188924
+              |
+        black |
+       black  |   1.812458   .2252933     4.78   0.000      1.42045    2.312651
+              |
+      ed_gths |
+ - Greater..  |   .6719831   .0697414    -3.83   0.000     .5482607    .8236251
+          age |   1.012476   .0027931     4.49   0.000     1.007015    1.017968
+              |
+      vigmale |
+      - Male  |   1.225298   .1138589     2.19   0.029     1.021218    1.470161
+              |
+      vigrace |
+     - Black  |    1.03829   .1162396     0.34   0.737     .8336665    1.293139
+  - Hispanic  |   1.003581   .1153747     0.03   0.975     .8010557    1.257309
+              |
+        viged |
+ - High Sc..  |   .9228672   .1051942    -0.70   0.481     .7380423    1.153977
+   - College  |   1.000239   .1146505     0.00   0.998     .7989204    1.252287
+              |
+    mentlillR |
+ - Mental ..  |   .8883978   .2028731    -0.52   0.604     .5677578    1.390119
+              |
+       neurob |
+ - Neurobi..  |   1.534945   .3420388     1.92   0.055     .9916351     2.37593
+              |
+    stressesR |
+ - Caused ..  |   .7319765   .0985979    -2.32   0.021     .5620836    .9532205
+              |
+    wayraiseR |
+ - Way x w..  |   .9341545      .0946    -0.67   0.501     .7659319    1.139324
+              |
+    charactrR |
+ - Bad cha..  |   1.587731   .1625262     4.52   0.000     1.299019    1.940611
+     seriousp |   1.484589   .1399536     4.19   0.000     1.234058    1.785981
+              |
+    dectreatR |
+ - Treatme..  |   .6761916   .0836304    -3.16   0.002     .5305899    .8617486
+              |
+    decmoneyR |
+ - Financi..  |   .8648309   .1099219    -1.14   0.253     .6740704    1.109576
+              |
+     hurtothR |
+ - Likely ..  |   1.936814   .2240366     5.71   0.000      1.54381    2.429863
+              |
+    hurtselfR |
+ - Likely ..  |   1.159224   .1696413     1.01   0.313     .8700819    1.544452
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.447789   .5864334     0.91   0.361     .6543446    3.203349
+        1996 #|
+ - Alcohol..  |   1.420077   .5858445     0.85   0.395      .632464    3.188514
+        1996 #|
+ - Schizop..  |   1.500328   .5875111     1.04   0.300     .6962313    3.233099
+        1996 #|
+ - Drug Pr..  |    2.05696   .8139642     1.82   0.068     .9468511    4.468585
+        2006 #|
+ - Depress..  |   1.730298   .6334951     1.50   0.134     .8440634    3.547046
+        2006 #|
+ - Alcohol..  |   .8462318   .3273045    -0.43   0.666     .3964166    1.806454
+        2006 #|
+ - Schizop..  |   1.615709   .5832467     1.33   0.184     .7961392     3.27897
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0559135    .023039    -7.00   0.000     .0249266     .125421
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   -.086393   .0565177    -1.53   0.126     -.197203     .024417
+       2006  |  -.0542137   .0519798    -1.04   0.297    -.1561265    .0476992
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustmedR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==2
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      12.35
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustmedR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .6180106   .1967537    -1.51   0.131     .3310633    1.153668
+        2006  |   .7453353   .2096209    -1.05   0.296     .4294138    1.293681
+              |
+      vigver2 |
+ - Depress..  |   .6424487   .1879384    -1.51   0.130     .3620336    1.140061
+ - Alcohol..  |   .5223345   .1626167    -2.09   0.037     .2836989    .9617001
+ - Schizop..  |    .977423   .3041707    -0.07   0.942     .5310098     1.79913
+ - Drug Pr..  |   .4414844   .1375852    -2.62   0.009     .2396381    .8133453
+              |
+       female |
+    - Female  |   .9856231    .094273    -0.15   0.880     .8170858    1.188924
+              |
+        black |
+       black  |   1.812458   .2252933     4.78   0.000      1.42045    2.312651
+              |
+      ed_gths |
+ - Greater..  |   .6719831   .0697414    -3.83   0.000     .5482607    .8236251
+          age |   1.012476   .0027931     4.49   0.000     1.007015    1.017968
+              |
+      vigmale |
+      - Male  |   1.225298   .1138589     2.19   0.029     1.021218    1.470161
+              |
+      vigrace |
+     - Black  |    1.03829   .1162396     0.34   0.737     .8336665    1.293139
+  - Hispanic  |   1.003581   .1153747     0.03   0.975     .8010557    1.257309
+              |
+        viged |
+ - High Sc..  |   .9228672   .1051942    -0.70   0.481     .7380423    1.153977
+   - College  |   1.000239   .1146505     0.00   0.998     .7989204    1.252287
+              |
+    mentlillR |
+ - Mental ..  |   .8883978   .2028731    -0.52   0.604     .5677578    1.390119
+              |
+       neurob |
+ - Neurobi..  |   1.534945   .3420388     1.92   0.055     .9916351     2.37593
+              |
+    stressesR |
+ - Caused ..  |   .7319765   .0985979    -2.32   0.021     .5620836    .9532205
+              |
+    wayraiseR |
+ - Way x w..  |   .9341545      .0946    -0.67   0.501     .7659319    1.139324
+              |
+    charactrR |
+ - Bad cha..  |   1.587731   .1625262     4.52   0.000     1.299019    1.940611
+     seriousp |   1.484589   .1399536     4.19   0.000     1.234058    1.785981
+              |
+    dectreatR |
+ - Treatme..  |   .6761916   .0836304    -3.16   0.002     .5305899    .8617486
+              |
+    decmoneyR |
+ - Financi..  |   .8648309   .1099219    -1.14   0.253     .6740704    1.109576
+              |
+     hurtothR |
+ - Likely ..  |   1.936814   .2240366     5.71   0.000      1.54381    2.429863
+              |
+    hurtselfR |
+ - Likely ..  |   1.159224   .1696413     1.01   0.313     .8700819    1.544452
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.447789   .5864334     0.91   0.361     .6543446    3.203349
+        1996 #|
+ - Alcohol..  |   1.420077   .5858445     0.85   0.395      .632464    3.188514
+        1996 #|
+ - Schizop..  |   1.500328   .5875111     1.04   0.300     .6962313    3.233099
+        1996 #|
+ - Drug Pr..  |    2.05696   .8139642     1.82   0.068     .9468511    4.468585
+        2006 #|
+ - Depress..  |   1.730298   .6334951     1.50   0.134     .8440634    3.547046
+        2006 #|
+ - Alcohol..  |   .8462318   .3273045    -0.43   0.666     .3964166    1.806454
+        2006 #|
+ - Schizop..  |   1.615709   .5832467     1.33   0.184     .7961392     3.27897
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0559135    .023039    -7.00   0.000     .0249266     .125421
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0183803   .0415016    -0.44   0.658    -.0997492    .0629887
+       2006  |   .0447187   .0410225     1.09   0.276    -.0357109    .1251483
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustmedR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==3
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      12.35
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustmedR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .6180106   .1967537    -1.51   0.131     .3310633    1.153668
+        2006  |   .7453353   .2096209    -1.05   0.296     .4294138    1.293681
+              |
+      vigver2 |
+ - Depress..  |   .6424487   .1879384    -1.51   0.130     .3620336    1.140061
+ - Alcohol..  |   .5223345   .1626167    -2.09   0.037     .2836989    .9617001
+ - Schizop..  |    .977423   .3041707    -0.07   0.942     .5310098     1.79913
+ - Drug Pr..  |   .4414844   .1375852    -2.62   0.009     .2396381    .8133453
+              |
+       female |
+    - Female  |   .9856231    .094273    -0.15   0.880     .8170858    1.188924
+              |
+        black |
+       black  |   1.812458   .2252933     4.78   0.000      1.42045    2.312651
+              |
+      ed_gths |
+ - Greater..  |   .6719831   .0697414    -3.83   0.000     .5482607    .8236251
+          age |   1.012476   .0027931     4.49   0.000     1.007015    1.017968
+              |
+      vigmale |
+      - Male  |   1.225298   .1138589     2.19   0.029     1.021218    1.470161
+              |
+      vigrace |
+     - Black  |    1.03829   .1162396     0.34   0.737     .8336665    1.293139
+  - Hispanic  |   1.003581   .1153747     0.03   0.975     .8010557    1.257309
+              |
+        viged |
+ - High Sc..  |   .9228672   .1051942    -0.70   0.481     .7380423    1.153977
+   - College  |   1.000239   .1146505     0.00   0.998     .7989204    1.252287
+              |
+    mentlillR |
+ - Mental ..  |   .8883978   .2028731    -0.52   0.604     .5677578    1.390119
+              |
+       neurob |
+ - Neurobi..  |   1.534945   .3420388     1.92   0.055     .9916351     2.37593
+              |
+    stressesR |
+ - Caused ..  |   .7319765   .0985979    -2.32   0.021     .5620836    .9532205
+              |
+    wayraiseR |
+ - Way x w..  |   .9341545      .0946    -0.67   0.501     .7659319    1.139324
+              |
+    charactrR |
+ - Bad cha..  |   1.587731   .1625262     4.52   0.000     1.299019    1.940611
+     seriousp |   1.484589   .1399536     4.19   0.000     1.234058    1.785981
+              |
+    dectreatR |
+ - Treatme..  |   .6761916   .0836304    -3.16   0.002     .5305899    .8617486
+              |
+    decmoneyR |
+ - Financi..  |   .8648309   .1099219    -1.14   0.253     .6740704    1.109576
+              |
+     hurtothR |
+ - Likely ..  |   1.936814   .2240366     5.71   0.000      1.54381    2.429863
+              |
+    hurtselfR |
+ - Likely ..  |   1.159224   .1696413     1.01   0.313     .8700819    1.544452
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.447789   .5864334     0.91   0.361     .6543446    3.203349
+        1996 #|
+ - Alcohol..  |   1.420077   .5858445     0.85   0.395      .632464    3.188514
+        1996 #|
+ - Schizop..  |   1.500328   .5875111     1.04   0.300     .6962313    3.233099
+        1996 #|
+ - Drug Pr..  |    2.05696   .8139642     1.82   0.068     .9468511    4.468585
+        2006 #|
+ - Depress..  |   1.730298   .6334951     1.50   0.134     .8440634    3.547046
+        2006 #|
+ - Alcohol..  |   .8462318   .3273045    -0.43   0.666     .3964166    1.806454
+        2006 #|
+ - Schizop..  |   1.615709   .5832467     1.33   0.184     .7961392     3.27897
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0559135    .023039    -7.00   0.000     .0249266     .125421
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   -.019784   .0405874    -0.49   0.626    -.0993605    .0597926
+       2006  |  -.0647633   .0385137    -1.68   0.093    -.1402741    .0107475
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustmedR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==4
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      12.35
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustmedR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .6180106   .1967537    -1.51   0.131     .3310633    1.153668
+        2006  |   .7453353   .2096209    -1.05   0.296     .4294138    1.293681
+              |
+      vigver2 |
+ - Depress..  |   .6424487   .1879384    -1.51   0.130     .3620336    1.140061
+ - Alcohol..  |   .5223345   .1626167    -2.09   0.037     .2836989    .9617001
+ - Schizop..  |    .977423   .3041707    -0.07   0.942     .5310098     1.79913
+ - Drug Pr..  |   .4414844   .1375852    -2.62   0.009     .2396381    .8133453
+              |
+       female |
+    - Female  |   .9856231    .094273    -0.15   0.880     .8170858    1.188924
+              |
+        black |
+       black  |   1.812458   .2252933     4.78   0.000      1.42045    2.312651
+              |
+      ed_gths |
+ - Greater..  |   .6719831   .0697414    -3.83   0.000     .5482607    .8236251
+          age |   1.012476   .0027931     4.49   0.000     1.007015    1.017968
+              |
+      vigmale |
+      - Male  |   1.225298   .1138589     2.19   0.029     1.021218    1.470161
+              |
+      vigrace |
+     - Black  |    1.03829   .1162396     0.34   0.737     .8336665    1.293139
+  - Hispanic  |   1.003581   .1153747     0.03   0.975     .8010557    1.257309
+              |
+        viged |
+ - High Sc..  |   .9228672   .1051942    -0.70   0.481     .7380423    1.153977
+   - College  |   1.000239   .1146505     0.00   0.998     .7989204    1.252287
+              |
+    mentlillR |
+ - Mental ..  |   .8883978   .2028731    -0.52   0.604     .5677578    1.390119
+              |
+       neurob |
+ - Neurobi..  |   1.534945   .3420388     1.92   0.055     .9916351     2.37593
+              |
+    stressesR |
+ - Caused ..  |   .7319765   .0985979    -2.32   0.021     .5620836    .9532205
+              |
+    wayraiseR |
+ - Way x w..  |   .9341545      .0946    -0.67   0.501     .7659319    1.139324
+              |
+    charactrR |
+ - Bad cha..  |   1.587731   .1625262     4.52   0.000     1.299019    1.940611
+     seriousp |   1.484589   .1399536     4.19   0.000     1.234058    1.785981
+              |
+    dectreatR |
+ - Treatme..  |   .6761916   .0836304    -3.16   0.002     .5305899    .8617486
+              |
+    decmoneyR |
+ - Financi..  |   .8648309   .1099219    -1.14   0.253     .6740704    1.109576
+              |
+     hurtothR |
+ - Likely ..  |   1.936814   .2240366     5.71   0.000      1.54381    2.429863
+              |
+    hurtselfR |
+ - Likely ..  |   1.159224   .1696413     1.01   0.313     .8700819    1.544452
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.447789   .5864334     0.91   0.361     .6543446    3.203349
+        1996 #|
+ - Alcohol..  |   1.420077   .5858445     0.85   0.395      .632464    3.188514
+        1996 #|
+ - Schizop..  |   1.500328   .5875111     1.04   0.300     .6962313    3.233099
+        1996 #|
+ - Drug Pr..  |    2.05696   .8139642     1.82   0.068     .9468511    4.468585
+        2006 #|
+ - Depress..  |   1.730298   .6334951     1.50   0.134     .8440634    3.547046
+        2006 #|
+ - Alcohol..  |   .8462318   .3273045    -0.43   0.666     .3964166    1.806454
+        2006 #|
+ - Schizop..  |   1.615709   .5832467     1.33   0.184     .7961392     3.27897
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0559135    .023039    -7.00   0.000     .0249266     .125421
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustmedR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0142513   .0432829    -0.33   0.742    -.0991128    .0706102
+       2006  |   .0360378   .0438225     0.82   0.411    -.0498816    .1219572
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit mustdocR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==1
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.98
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustdocR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .467438   .1674011    -2.12   0.034     .2316249    .9433281
+        2006  |   .5234775   .1743802    -1.94   0.052     .2724278    1.005876
+              |
+      vigver2 |
+ - Depress..  |   .8806326   .2623518    -0.43   0.670     .4910499    1.579298
+ - Alcohol..  |   1.268669   .3885535     0.78   0.437     .6959281    2.312769
+ - Schizop..  |   2.115238   .6635088     2.39   0.017     1.143574      3.9125
+ - Drug Pr..  |   2.794863    .856065     3.36   0.001     1.533028    5.095312
+              |
+       female |
+    - Female  |    1.27788   .1196029     2.62   0.009     1.063641     1.53527
+              |
+        black |
+       black  |   1.533066   .1936779     3.38   0.001     1.196711    1.963959
+              |
+      ed_gths |
+ - Greater..  |   .8310607   .0818409    -1.88   0.060     .6851415    1.008057
+          age |   1.006179    .002683     2.31   0.021     1.000932    1.011453
+              |
+      vigmale |
+      - Male  |   1.092257   .1003668     0.96   0.337     .9121835    1.307879
+              |
+      vigrace |
+     - Black  |   .9324202    .104613    -0.62   0.533     .7483055    1.161835
+  - Hispanic  |   .9886401   .1112953    -0.10   0.919     .7928349    1.232803
+              |
+        viged |
+ - High Sc..  |   .9872611   .1103785    -0.11   0.909     .7929272    1.229223
+   - College  |   1.097447   .1245012     0.82   0.412     .8785881    1.370823
+              |
+    mentlillR |
+ - Mental ..  |   1.137748   .2404235     0.61   0.541     .7518198    1.721783
+              |
+       neurob |
+ - Neurobi..  |   1.200289   .2471595     0.89   0.375     .8015866    1.797303
+              |
+    stressesR |
+ - Caused ..  |   .6842339   .0929084    -2.79   0.005      .524307    .8929425
+              |
+    wayraiseR |
+ - Way x w..  |   .8763027   .0887607    -1.30   0.192     .7184672    1.068812
+              |
+    charactrR |
+ - Bad cha..  |   1.403144   .1414911     3.36   0.001     1.151435    1.709878
+     seriousp |   1.225541   .1156867     2.15   0.031     1.018476    1.474706
+              |
+    dectreatR |
+ - Treatme..  |   .7061547    .082526    -2.98   0.003      .561551     .887995
+              |
+    decmoneyR |
+ - Financi..  |   .7211546   .0873893    -2.70   0.007     .5686505    .9145584
+              |
+     hurtothR |
+ - Likely ..  |   2.148128   .2347519     7.00   0.000     1.733835    2.661415
+              |
+    hurtselfR |
+ - Likely ..  |    1.40181    .200848     2.36   0.018     1.058498    1.856471
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.815637   .7924887     1.37   0.172     .7715642    4.272541
+        1996 #|
+ - Alcohol..  |    1.94923   .8411581     1.55   0.122     .8364071    4.542643
+        1996 #|
+ - Schizop..  |    1.64155    .698586     1.16   0.244     .7126738    3.781094
+        1996 #|
+ - Drug Pr..  |   1.908777   .8149367     1.51   0.130     .8264553    4.408501
+        2006 #|
+ - Depress..  |   2.582621   1.042129     2.35   0.019      1.17077    5.697047
+        2006 #|
+ - Alcohol..  |   1.702524   .6932037     1.31   0.191     .7663008     3.78257
+        2006 #|
+ - Schizop..  |   1.486678   .5977029     0.99   0.324     .6759049    3.270005
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0910496   .0370785    -5.88   0.000     .0409754    .2023173
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.1159915   .0528809    -2.19   0.028    -.2196709   -.0123121
+       2006  |  -.1011957   .0513558    -1.97   0.049     -.201885   -.0005064
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustdocR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==2
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.98
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustdocR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .467438   .1674011    -2.12   0.034     .2316249    .9433281
+        2006  |   .5234775   .1743802    -1.94   0.052     .2724278    1.005876
+              |
+      vigver2 |
+ - Depress..  |   .8806326   .2623518    -0.43   0.670     .4910499    1.579298
+ - Alcohol..  |   1.268669   .3885535     0.78   0.437     .6959281    2.312769
+ - Schizop..  |   2.115238   .6635088     2.39   0.017     1.143574      3.9125
+ - Drug Pr..  |   2.794863    .856065     3.36   0.001     1.533028    5.095312
+              |
+       female |
+    - Female  |    1.27788   .1196029     2.62   0.009     1.063641     1.53527
+              |
+        black |
+       black  |   1.533066   .1936779     3.38   0.001     1.196711    1.963959
+              |
+      ed_gths |
+ - Greater..  |   .8310607   .0818409    -1.88   0.060     .6851415    1.008057
+          age |   1.006179    .002683     2.31   0.021     1.000932    1.011453
+              |
+      vigmale |
+      - Male  |   1.092257   .1003668     0.96   0.337     .9121835    1.307879
+              |
+      vigrace |
+     - Black  |   .9324202    .104613    -0.62   0.533     .7483055    1.161835
+  - Hispanic  |   .9886401   .1112953    -0.10   0.919     .7928349    1.232803
+              |
+        viged |
+ - High Sc..  |   .9872611   .1103785    -0.11   0.909     .7929272    1.229223
+   - College  |   1.097447   .1245012     0.82   0.412     .8785881    1.370823
+              |
+    mentlillR |
+ - Mental ..  |   1.137748   .2404235     0.61   0.541     .7518198    1.721783
+              |
+       neurob |
+ - Neurobi..  |   1.200289   .2471595     0.89   0.375     .8015866    1.797303
+              |
+    stressesR |
+ - Caused ..  |   .6842339   .0929084    -2.79   0.005      .524307    .8929425
+              |
+    wayraiseR |
+ - Way x w..  |   .8763027   .0887607    -1.30   0.192     .7184672    1.068812
+              |
+    charactrR |
+ - Bad cha..  |   1.403144   .1414911     3.36   0.001     1.151435    1.709878
+     seriousp |   1.225541   .1156867     2.15   0.031     1.018476    1.474706
+              |
+    dectreatR |
+ - Treatme..  |   .7061547    .082526    -2.98   0.003      .561551     .887995
+              |
+    decmoneyR |
+ - Financi..  |   .7211546   .0873893    -2.70   0.007     .5686505    .9145584
+              |
+     hurtothR |
+ - Likely ..  |   2.148128   .2347519     7.00   0.000     1.733835    2.661415
+              |
+    hurtselfR |
+ - Likely ..  |    1.40181    .200848     2.36   0.018     1.058498    1.856471
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.815637   .7924887     1.37   0.172     .7715642    4.272541
+        1996 #|
+ - Alcohol..  |    1.94923   .8411581     1.55   0.122     .8364071    4.542643
+        1996 #|
+ - Schizop..  |    1.64155    .698586     1.16   0.244     .7126738    3.781094
+        1996 #|
+ - Drug Pr..  |   1.908777   .8149367     1.51   0.130     .8264553    4.408501
+        2006 #|
+ - Depress..  |   2.582621   1.042129     2.35   0.019      1.17077    5.697047
+        2006 #|
+ - Alcohol..  |   1.702524   .6932037     1.31   0.191     .7663008     3.78257
+        2006 #|
+ - Schizop..  |   1.486678   .5977029     0.99   0.324     .6759049    3.270005
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0910496   .0370785    -5.88   0.000     .0409754    .2023173
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0269162   .0410137    -0.66   0.512    -.1073286    .0534963
+       2006  |   .0536429   .0404472     1.33   0.185    -.0256588    .1329446
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustdocR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==3
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.98
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustdocR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .467438   .1674011    -2.12   0.034     .2316249    .9433281
+        2006  |   .5234775   .1743802    -1.94   0.052     .2724278    1.005876
+              |
+      vigver2 |
+ - Depress..  |   .8806326   .2623518    -0.43   0.670     .4910499    1.579298
+ - Alcohol..  |   1.268669   .3885535     0.78   0.437     .6959281    2.312769
+ - Schizop..  |   2.115238   .6635088     2.39   0.017     1.143574      3.9125
+ - Drug Pr..  |   2.794863    .856065     3.36   0.001     1.533028    5.095312
+              |
+       female |
+    - Female  |    1.27788   .1196029     2.62   0.009     1.063641     1.53527
+              |
+        black |
+       black  |   1.533066   .1936779     3.38   0.001     1.196711    1.963959
+              |
+      ed_gths |
+ - Greater..  |   .8310607   .0818409    -1.88   0.060     .6851415    1.008057
+          age |   1.006179    .002683     2.31   0.021     1.000932    1.011453
+              |
+      vigmale |
+      - Male  |   1.092257   .1003668     0.96   0.337     .9121835    1.307879
+              |
+      vigrace |
+     - Black  |   .9324202    .104613    -0.62   0.533     .7483055    1.161835
+  - Hispanic  |   .9886401   .1112953    -0.10   0.919     .7928349    1.232803
+              |
+        viged |
+ - High Sc..  |   .9872611   .1103785    -0.11   0.909     .7929272    1.229223
+   - College  |   1.097447   .1245012     0.82   0.412     .8785881    1.370823
+              |
+    mentlillR |
+ - Mental ..  |   1.137748   .2404235     0.61   0.541     .7518198    1.721783
+              |
+       neurob |
+ - Neurobi..  |   1.200289   .2471595     0.89   0.375     .8015866    1.797303
+              |
+    stressesR |
+ - Caused ..  |   .6842339   .0929084    -2.79   0.005      .524307    .8929425
+              |
+    wayraiseR |
+ - Way x w..  |   .8763027   .0887607    -1.30   0.192     .7184672    1.068812
+              |
+    charactrR |
+ - Bad cha..  |   1.403144   .1414911     3.36   0.001     1.151435    1.709878
+     seriousp |   1.225541   .1156867     2.15   0.031     1.018476    1.474706
+              |
+    dectreatR |
+ - Treatme..  |   .7061547    .082526    -2.98   0.003      .561551     .887995
+              |
+    decmoneyR |
+ - Financi..  |   .7211546   .0873893    -2.70   0.007     .5686505    .9145584
+              |
+     hurtothR |
+ - Likely ..  |   2.148128   .2347519     7.00   0.000     1.733835    2.661415
+              |
+    hurtselfR |
+ - Likely ..  |    1.40181    .200848     2.36   0.018     1.058498    1.856471
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.815637   .7924887     1.37   0.172     .7715642    4.272541
+        1996 #|
+ - Alcohol..  |    1.94923   .8411581     1.55   0.122     .8364071    4.542643
+        1996 #|
+ - Schizop..  |    1.64155    .698586     1.16   0.244     .7126738    3.781094
+        1996 #|
+ - Drug Pr..  |   1.908777   .8149367     1.51   0.130     .8264553    4.408501
+        2006 #|
+ - Depress..  |   2.582621   1.042129     2.35   0.019      1.17077    5.697047
+        2006 #|
+ - Alcohol..  |   1.702524   .6932037     1.31   0.191     .7663008     3.78257
+        2006 #|
+ - Schizop..  |   1.486678   .5977029     0.99   0.324     .6759049    3.270005
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0910496   .0370785    -5.88   0.000     .0409754    .2023173
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0173851   .0450987    -0.39   0.700    -.1058065    .0710364
+       2006  |  -.0214497   .0442515    -0.48   0.628    -.1082102    .0653109
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit mustdocR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.s
+> tressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtothR
+>  i.hurtselfR if vigver2==4
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.98
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     mustdocR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .467438   .1674011    -2.12   0.034     .2316249    .9433281
+        2006  |   .5234775   .1743802    -1.94   0.052     .2724278    1.005876
+              |
+      vigver2 |
+ - Depress..  |   .8806326   .2623518    -0.43   0.670     .4910499    1.579298
+ - Alcohol..  |   1.268669   .3885535     0.78   0.437     .6959281    2.312769
+ - Schizop..  |   2.115238   .6635088     2.39   0.017     1.143574      3.9125
+ - Drug Pr..  |   2.794863    .856065     3.36   0.001     1.533028    5.095312
+              |
+       female |
+    - Female  |    1.27788   .1196029     2.62   0.009     1.063641     1.53527
+              |
+        black |
+       black  |   1.533066   .1936779     3.38   0.001     1.196711    1.963959
+              |
+      ed_gths |
+ - Greater..  |   .8310607   .0818409    -1.88   0.060     .6851415    1.008057
+          age |   1.006179    .002683     2.31   0.021     1.000932    1.011453
+              |
+      vigmale |
+      - Male  |   1.092257   .1003668     0.96   0.337     .9121835    1.307879
+              |
+      vigrace |
+     - Black  |   .9324202    .104613    -0.62   0.533     .7483055    1.161835
+  - Hispanic  |   .9886401   .1112953    -0.10   0.919     .7928349    1.232803
+              |
+        viged |
+ - High Sc..  |   .9872611   .1103785    -0.11   0.909     .7929272    1.229223
+   - College  |   1.097447   .1245012     0.82   0.412     .8785881    1.370823
+              |
+    mentlillR |
+ - Mental ..  |   1.137748   .2404235     0.61   0.541     .7518198    1.721783
+              |
+       neurob |
+ - Neurobi..  |   1.200289   .2471595     0.89   0.375     .8015866    1.797303
+              |
+    stressesR |
+ - Caused ..  |   .6842339   .0929084    -2.79   0.005      .524307    .8929425
+              |
+    wayraiseR |
+ - Way x w..  |   .8763027   .0887607    -1.30   0.192     .7184672    1.068812
+              |
+    charactrR |
+ - Bad cha..  |   1.403144   .1414911     3.36   0.001     1.151435    1.709878
+     seriousp |   1.225541   .1156867     2.15   0.031     1.018476    1.474706
+              |
+    dectreatR |
+ - Treatme..  |   .7061547    .082526    -2.98   0.003      .561551     .887995
+              |
+    decmoneyR |
+ - Financi..  |   .7211546   .0873893    -2.70   0.007     .5686505    .9145584
+              |
+     hurtothR |
+ - Likely ..  |   2.148128   .2347519     7.00   0.000     1.733835    2.661415
+              |
+    hurtselfR |
+ - Likely ..  |    1.40181    .200848     2.36   0.018     1.058498    1.856471
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.815637   .7924887     1.37   0.172     .7715642    4.272541
+        1996 #|
+ - Alcohol..  |    1.94923   .8411581     1.55   0.122     .8364071    4.542643
+        1996 #|
+ - Schizop..  |    1.64155    .698586     1.16   0.244     .7126738    3.781094
+        1996 #|
+ - Drug Pr..  |   1.908777   .8149367     1.51   0.130     .8264553    4.408501
+        2006 #|
+ - Depress..  |   2.582621   1.042129     2.35   0.019      1.17077    5.697047
+        2006 #|
+ - Alcohol..  |   1.702524   .6932037     1.31   0.191     .7663008     3.78257
+        2006 #|
+ - Schizop..  |   1.486678   .5977029     0.99   0.324     .6759049    3.270005
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0910496   .0370785    -5.88   0.000     .0409754    .2023173
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(mustdocR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0537195   .0465478    -1.15   0.249    -.1449822    .0375431
+       2006  |  -.0509038   .0459337    -1.11   0.268    -.1409624    .0391548
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit musthospR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==1
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.84
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    musthospR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .742753    .242278    -0.91   0.362     .3918306    1.407961
+        2006  |   .7191552   .2134526    -1.11   0.267     .4018763    1.286924
+              |
+      vigver2 |
+ - Depress..  |   .6894809   .2022494    -1.27   0.205     .3879274    1.225446
+ - Alcohol..  |   .9675891   .2927962    -0.11   0.913     .5345982    1.751276
+ - Schizop..  |   2.147458   .6717756     2.44   0.015     1.162945    3.965429
+ - Drug Pr..  |   2.470872   .7597929     2.94   0.003     1.352128    4.515259
+              |
+       female |
+    - Female  |   1.123553   .1033464     1.27   0.205     .9381495    1.345596
+              |
+        black |
+       black  |    1.86393   .2309583     5.03   0.000     1.461916    2.376495
+              |
+      ed_gths |
+ - Greater..  |   .6522893   .0640713    -4.35   0.000     .5380252    .7908204
+          age |   1.007271   .0026215     2.78   0.005     1.002144    1.012424
+              |
+      vigmale |
+      - Male  |   1.111904   .1014172     1.16   0.245     .9298285    1.329633
+              |
+      vigrace |
+     - Black  |    1.06271   .1172533     0.55   0.581     .8559857    1.319359
+  - Hispanic  |   1.095211   .1220386     0.82   0.414      .880272    1.362631
+              |
+        viged |
+ - High Sc..  |   1.017356   .1114419     0.16   0.875     .8207304    1.261089
+   - College  |   1.061293    .117979     0.54   0.593     .8534529    1.319749
+              |
+    mentlillR |
+ - Mental ..  |   1.000362   .2103343     0.00   0.999     .6624065    1.510739
+              |
+       neurob |
+ - Neurobi..  |   1.342832   .2766087     1.43   0.153     .8966533    2.011031
+              |
+    stressesR |
+ - Caused ..  |   .9388467   .1306432    -0.45   0.650     .7146735    1.233337
+              |
+    wayraiseR |
+ - Way x w..  |   .8515109   .0851505    -1.61   0.108     .6999098    1.035949
+              |
+    charactrR |
+ - Bad cha..  |   1.622594   .1612241     4.87   0.000     1.335378    1.971584
+     seriousp |   1.237607   .1136846     2.32   0.020     1.033633    1.481832
+              |
+    dectreatR |
+ - Treatme..  |   .7510395   .0856729    -2.51   0.012     .6005256    .9392778
+              |
+    decmoneyR |
+ - Financi..  |   .5276673   .0622197    -5.42   0.000     .4187525    .6649102
+              |
+     hurtothR |
+ - Likely ..  |    1.92355    .204865     6.14   0.000     1.561051    2.370228
+              |
+    hurtselfR |
+ - Likely ..  |   1.472863   .2036205     2.80   0.005      1.12317    1.931429
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.323908   .5389957     0.69   0.491     .5959313    2.941166
+        1996 #|
+ - Alcohol..  |   1.442081   .5802758     0.91   0.363     .6551812    3.174081
+        1996 #|
+ - Schizop..  |   .6538949   .2637287    -1.05   0.292      .296542    1.441882
+        1996 #|
+ - Drug Pr..  |   1.138618   .4574562     0.32   0.747      .517941    2.503085
+        2006 #|
+ - Depress..  |   2.158114    .809577     2.05   0.040     1.034319    4.502923
+        2006 #|
+ - Alcohol..  |   1.263949    .472706     0.63   0.531     .6071281     2.63135
+        2006 #|
+ - Schizop..  |   .9173048   .3455558    -0.23   0.819       .43828    1.919887
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0886094   .0357192    -6.01   0.000     .0402011    .1953086
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0517766   .0564077    -0.92   0.359    -.1623708    .0588176
+       2006  |  -.0571211    .051515    -1.11   0.268    -.1581227    .0438804
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit musthospR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==2
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.84
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    musthospR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .742753    .242278    -0.91   0.362     .3918306    1.407961
+        2006  |   .7191552   .2134526    -1.11   0.267     .4018763    1.286924
+              |
+      vigver2 |
+ - Depress..  |   .6894809   .2022494    -1.27   0.205     .3879274    1.225446
+ - Alcohol..  |   .9675891   .2927962    -0.11   0.913     .5345982    1.751276
+ - Schizop..  |   2.147458   .6717756     2.44   0.015     1.162945    3.965429
+ - Drug Pr..  |   2.470872   .7597929     2.94   0.003     1.352128    4.515259
+              |
+       female |
+    - Female  |   1.123553   .1033464     1.27   0.205     .9381495    1.345596
+              |
+        black |
+       black  |    1.86393   .2309583     5.03   0.000     1.461916    2.376495
+              |
+      ed_gths |
+ - Greater..  |   .6522893   .0640713    -4.35   0.000     .5380252    .7908204
+          age |   1.007271   .0026215     2.78   0.005     1.002144    1.012424
+              |
+      vigmale |
+      - Male  |   1.111904   .1014172     1.16   0.245     .9298285    1.329633
+              |
+      vigrace |
+     - Black  |    1.06271   .1172533     0.55   0.581     .8559857    1.319359
+  - Hispanic  |   1.095211   .1220386     0.82   0.414      .880272    1.362631
+              |
+        viged |
+ - High Sc..  |   1.017356   .1114419     0.16   0.875     .8207304    1.261089
+   - College  |   1.061293    .117979     0.54   0.593     .8534529    1.319749
+              |
+    mentlillR |
+ - Mental ..  |   1.000362   .2103343     0.00   0.999     .6624065    1.510739
+              |
+       neurob |
+ - Neurobi..  |   1.342832   .2766087     1.43   0.153     .8966533    2.011031
+              |
+    stressesR |
+ - Caused ..  |   .9388467   .1306432    -0.45   0.650     .7146735    1.233337
+              |
+    wayraiseR |
+ - Way x w..  |   .8515109   .0851505    -1.61   0.108     .6999098    1.035949
+              |
+    charactrR |
+ - Bad cha..  |   1.622594   .1612241     4.87   0.000     1.335378    1.971584
+     seriousp |   1.237607   .1136846     2.32   0.020     1.033633    1.481832
+              |
+    dectreatR |
+ - Treatme..  |   .7510395   .0856729    -2.51   0.012     .6005256    .9392778
+              |
+    decmoneyR |
+ - Financi..  |   .5276673   .0622197    -5.42   0.000     .4187525    .6649102
+              |
+     hurtothR |
+ - Likely ..  |    1.92355    .204865     6.14   0.000     1.561051    2.370228
+              |
+    hurtselfR |
+ - Likely ..  |   1.472863   .2036205     2.80   0.005      1.12317    1.931429
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.323908   .5389957     0.69   0.491     .5959313    2.941166
+        1996 #|
+ - Alcohol..  |   1.442081   .5802758     0.91   0.363     .6551812    3.174081
+        1996 #|
+ - Schizop..  |   .6538949   .2637287    -1.05   0.292      .296542    1.441882
+        1996 #|
+ - Drug Pr..  |   1.138618   .4574562     0.32   0.747      .517941    2.503085
+        2006 #|
+ - Depress..  |   2.158114    .809577     2.05   0.040     1.034319    4.502923
+        2006 #|
+ - Alcohol..  |   1.263949    .472706     0.63   0.531     .6071281     2.63135
+        2006 #|
+ - Schizop..  |   .9173048   .3455558    -0.23   0.819       .43828    1.919887
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0886094   .0357192    -6.01   0.000     .0402011    .1953086
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0027184   .0395771    -0.07   0.945    -.0803142    .0748773
+       2006  |   .0763853   .0395709     1.93   0.054    -.0011983    .1539689
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit musthospR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==3
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.84
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    musthospR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .742753    .242278    -0.91   0.362     .3918306    1.407961
+        2006  |   .7191552   .2134526    -1.11   0.267     .4018763    1.286924
+              |
+      vigver2 |
+ - Depress..  |   .6894809   .2022494    -1.27   0.205     .3879274    1.225446
+ - Alcohol..  |   .9675891   .2927962    -0.11   0.913     .5345982    1.751276
+ - Schizop..  |   2.147458   .6717756     2.44   0.015     1.162945    3.965429
+ - Drug Pr..  |   2.470872   .7597929     2.94   0.003     1.352128    4.515259
+              |
+       female |
+    - Female  |   1.123553   .1033464     1.27   0.205     .9381495    1.345596
+              |
+        black |
+       black  |    1.86393   .2309583     5.03   0.000     1.461916    2.376495
+              |
+      ed_gths |
+ - Greater..  |   .6522893   .0640713    -4.35   0.000     .5380252    .7908204
+          age |   1.007271   .0026215     2.78   0.005     1.002144    1.012424
+              |
+      vigmale |
+      - Male  |   1.111904   .1014172     1.16   0.245     .9298285    1.329633
+              |
+      vigrace |
+     - Black  |    1.06271   .1172533     0.55   0.581     .8559857    1.319359
+  - Hispanic  |   1.095211   .1220386     0.82   0.414      .880272    1.362631
+              |
+        viged |
+ - High Sc..  |   1.017356   .1114419     0.16   0.875     .8207304    1.261089
+   - College  |   1.061293    .117979     0.54   0.593     .8534529    1.319749
+              |
+    mentlillR |
+ - Mental ..  |   1.000362   .2103343     0.00   0.999     .6624065    1.510739
+              |
+       neurob |
+ - Neurobi..  |   1.342832   .2766087     1.43   0.153     .8966533    2.011031
+              |
+    stressesR |
+ - Caused ..  |   .9388467   .1306432    -0.45   0.650     .7146735    1.233337
+              |
+    wayraiseR |
+ - Way x w..  |   .8515109   .0851505    -1.61   0.108     .6999098    1.035949
+              |
+    charactrR |
+ - Bad cha..  |   1.622594   .1612241     4.87   0.000     1.335378    1.971584
+     seriousp |   1.237607   .1136846     2.32   0.020     1.033633    1.481832
+              |
+    dectreatR |
+ - Treatme..  |   .7510395   .0856729    -2.51   0.012     .6005256    .9392778
+              |
+    decmoneyR |
+ - Financi..  |   .5276673   .0622197    -5.42   0.000     .4187525    .6649102
+              |
+     hurtothR |
+ - Likely ..  |    1.92355    .204865     6.14   0.000     1.561051    2.370228
+              |
+    hurtselfR |
+ - Likely ..  |   1.472863   .2036205     2.80   0.005      1.12317    1.931429
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.323908   .5389957     0.69   0.491     .5959313    2.941166
+        1996 #|
+ - Alcohol..  |   1.442081   .5802758     0.91   0.363     .6551812    3.174081
+        1996 #|
+ - Schizop..  |   .6538949   .2637287    -1.05   0.292      .296542    1.441882
+        1996 #|
+ - Drug Pr..  |   1.138618   .4574562     0.32   0.747      .517941    2.503085
+        2006 #|
+ - Depress..  |   2.158114    .809577     2.05   0.040     1.034319    4.502923
+        2006 #|
+ - Alcohol..  |   1.263949    .472706     0.63   0.531     .6071281     2.63135
+        2006 #|
+ - Schizop..  |   .9173048   .3455558    -0.23   0.819       .43828    1.919887
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0886094   .0357192    -6.01   0.000     .0402011    .1953086
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   .0124543    .042886     0.29   0.772     -.071629    .0965376
+       2006  |  -.0169435   .0406758    -0.42   0.677    -.0966934    .0628065
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit musthospR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==4
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+                                                  Design df       =      3,600
+                                                  F(32, 3569)     =      16.84
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    musthospR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |    .742753    .242278    -0.91   0.362     .3918306    1.407961
+        2006  |   .7191552   .2134526    -1.11   0.267     .4018763    1.286924
+              |
+      vigver2 |
+ - Depress..  |   .6894809   .2022494    -1.27   0.205     .3879274    1.225446
+ - Alcohol..  |   .9675891   .2927962    -0.11   0.913     .5345982    1.751276
+ - Schizop..  |   2.147458   .6717756     2.44   0.015     1.162945    3.965429
+ - Drug Pr..  |   2.470872   .7597929     2.94   0.003     1.352128    4.515259
+              |
+       female |
+    - Female  |   1.123553   .1033464     1.27   0.205     .9381495    1.345596
+              |
+        black |
+       black  |    1.86393   .2309583     5.03   0.000     1.461916    2.376495
+              |
+      ed_gths |
+ - Greater..  |   .6522893   .0640713    -4.35   0.000     .5380252    .7908204
+          age |   1.007271   .0026215     2.78   0.005     1.002144    1.012424
+              |
+      vigmale |
+      - Male  |   1.111904   .1014172     1.16   0.245     .9298285    1.329633
+              |
+      vigrace |
+     - Black  |    1.06271   .1172533     0.55   0.581     .8559857    1.319359
+  - Hispanic  |   1.095211   .1220386     0.82   0.414      .880272    1.362631
+              |
+        viged |
+ - High Sc..  |   1.017356   .1114419     0.16   0.875     .8207304    1.261089
+   - College  |   1.061293    .117979     0.54   0.593     .8534529    1.319749
+              |
+    mentlillR |
+ - Mental ..  |   1.000362   .2103343     0.00   0.999     .6624065    1.510739
+              |
+       neurob |
+ - Neurobi..  |   1.342832   .2766087     1.43   0.153     .8966533    2.011031
+              |
+    stressesR |
+ - Caused ..  |   .9388467   .1306432    -0.45   0.650     .7146735    1.233337
+              |
+    wayraiseR |
+ - Way x w..  |   .8515109   .0851505    -1.61   0.108     .6999098    1.035949
+              |
+    charactrR |
+ - Bad cha..  |   1.622594   .1612241     4.87   0.000     1.335378    1.971584
+     seriousp |   1.237607   .1136846     2.32   0.020     1.033633    1.481832
+              |
+    dectreatR |
+ - Treatme..  |   .7510395   .0856729    -2.51   0.012     .6005256    .9392778
+              |
+    decmoneyR |
+ - Financi..  |   .5276673   .0622197    -5.42   0.000     .4187525    .6649102
+              |
+     hurtothR |
+ - Likely ..  |    1.92355    .204865     6.14   0.000     1.561051    2.370228
+              |
+    hurtselfR |
+ - Likely ..  |   1.472863   .2036205     2.80   0.005      1.12317    1.931429
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   1.323908   .5389957     0.69   0.491     .5959313    2.941166
+        1996 #|
+ - Alcohol..  |   1.442081   .5802758     0.91   0.363     .6551812    3.174081
+        1996 #|
+ - Schizop..  |   .6538949   .2637287    -1.05   0.292      .296542    1.441882
+        1996 #|
+ - Drug Pr..  |   1.138618   .4574562     0.32   0.747      .517941    2.503085
+        2006 #|
+ - Depress..  |   2.158114    .809577     2.05   0.040     1.034319    4.502923
+        2006 #|
+ - Alcohol..  |   1.263949    .472706     0.63   0.531     .6071281     2.63135
+        2006 #|
+ - Schizop..  |   .9173048   .3455558    -0.23   0.819       .43828    1.919887
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   .0886094   .0357192    -6.01   0.000     .0402011    .1953086
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,601
+Number of PSUs   = 3,601                          Population size = 3,619.6058
+Model VCE: Linearized                             Design df       =      3,600
+
+Expression: Pr(musthospR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.1402368   .0461149    -3.04   0.002    -.2306507   -.0498228
+       2006  |  -.0824145   .0459925    -1.79   0.073    -.1725884    .0077595
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit dangrothR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==1
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.21
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .2341316   .0936013    -3.63   0.000     .1069182     .512706
+        2006  |   .4115097   .1697125    -2.15   0.031     .1833218    .9237319
+              |
+      vigver2 |
+ - Depress..  |   .3396351   .1896958    -1.93   0.053     .1136141    1.015296
+ - Alcohol..  |   .3130871   .2202735    -1.65   0.099      .078813    1.243748
+ - Schizop..  |    .744263   .6620539    -0.33   0.740     .1301042    4.257567
+ - Drug Pr..  |   .8876723   .6542485    -0.16   0.872     .2092538     3.76558
+              |
+       female |
+    - Female  |    1.08321   .1815919     0.48   0.634     .7797711    1.504728
+              |
+        black |
+       black  |   .5909011   .1431423    -2.17   0.030     .3674911    .9501293
+              |
+      ed_gths |
+ - Greater..  |   1.166186   .2042926     0.88   0.380     .8271878    1.644113
+          age |   .9986882   .0048471    -0.27   0.787       .98923    1.008237
+              |
+      vigmale |
+      - Male  |   .9462002   .1605079    -0.33   0.744      .678487    1.319546
+              |
+      vigrace |
+     - Black  |   1.014381    .209102     0.07   0.945     .6771386    1.519584
+  - Hispanic  |   .9448511   .1847474    -0.29   0.772     .6439785    1.386294
+              |
+        viged |
+ - High Sc..  |   1.079342   .2204592     0.37   0.709     .7231693    1.610936
+   - College  |    1.17746   .2471601     0.78   0.436     .7802083    1.776976
+              |
+    mentlillR |
+ - Mental ..  |   1.441963   .5476019     0.96   0.335     .6848443    3.036102
+              |
+       neurob |
+ - Neurobi..  |    1.19389   .4603619     0.46   0.646     .5605733    2.542709
+              |
+    stressesR |
+ - Caused ..  |   1.634636   .3690231     2.18   0.030     1.050015    2.544759
+              |
+    wayraiseR |
+ - Way x w..  |   1.041344   .1905268     0.22   0.825     .7274515     1.49068
+              |
+    charactrR |
+ - Bad cha..  |    1.31434   .2331375     1.54   0.123     .9282628    1.860992
+     seriousp |   1.633584   .2292779     3.50   0.000     1.240603    2.151048
+              |
+    dectreatR |
+ - Treatme..  |   .6192025   .1492787    -1.99   0.047     .3859705    .9933705
+              |
+    decmoneyR |
+ - Financi..  |   1.052497   .2484894     0.22   0.828     .6625046    1.672065
+              |
+     hurtothR |
+ - Likely ..  |   1.034928   .2195632     0.16   0.871     .6827542    1.568758
+              |
+    hurtselfR |
+ - Likely ..  |   1.505601   .3294818     1.87   0.062     .9803306    2.312317
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   3.193013   1.968057     1.88   0.060     .9536184    10.69121
+        1996 #|
+ - Alcohol..  |   2.185768   1.576968     1.08   0.279     .5312274    8.993479
+        1996 #|
+ - Schizop..  |   1.106142   .9917496     0.11   0.910      .190713    6.415663
+        1996 #|
+ - Drug Pr..  |   .8261202    .634648    -0.25   0.804     .1831923    3.725455
+        2006 #|
+ - Depress..  |   1.153124   .6909224     0.24   0.812      .356194    3.733066
+        2006 #|
+ - Alcohol..  |   .7999446   .5810874    -0.31   0.759     .1925444    3.323448
+        2006 #|
+ - Schizop..  |   .4071571   .3666068    -1.00   0.318      .069675    2.379289
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   5.785181   3.612642     2.81   0.005     1.700563    19.68073
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   -.051007   .0145547    -3.50   0.000    -.0795433   -.0224707
+       2006  |  -.0236935   .0106275    -2.23   0.026    -.0445301   -.0028568
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit dangrothR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==2
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.21
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .2341316   .0936013    -3.63   0.000     .1069182     .512706
+        2006  |   .4115097   .1697125    -2.15   0.031     .1833218    .9237319
+              |
+      vigver2 |
+ - Depress..  |   .3396351   .1896958    -1.93   0.053     .1136141    1.015296
+ - Alcohol..  |   .3130871   .2202735    -1.65   0.099      .078813    1.243748
+ - Schizop..  |    .744263   .6620539    -0.33   0.740     .1301042    4.257567
+ - Drug Pr..  |   .8876723   .6542485    -0.16   0.872     .2092538     3.76558
+              |
+       female |
+    - Female  |    1.08321   .1815919     0.48   0.634     .7797711    1.504728
+              |
+        black |
+       black  |   .5909011   .1431423    -2.17   0.030     .3674911    .9501293
+              |
+      ed_gths |
+ - Greater..  |   1.166186   .2042926     0.88   0.380     .8271878    1.644113
+          age |   .9986882   .0048471    -0.27   0.787       .98923    1.008237
+              |
+      vigmale |
+      - Male  |   .9462002   .1605079    -0.33   0.744      .678487    1.319546
+              |
+      vigrace |
+     - Black  |   1.014381    .209102     0.07   0.945     .6771386    1.519584
+  - Hispanic  |   .9448511   .1847474    -0.29   0.772     .6439785    1.386294
+              |
+        viged |
+ - High Sc..  |   1.079342   .2204592     0.37   0.709     .7231693    1.610936
+   - College  |    1.17746   .2471601     0.78   0.436     .7802083    1.776976
+              |
+    mentlillR |
+ - Mental ..  |   1.441963   .5476019     0.96   0.335     .6848443    3.036102
+              |
+       neurob |
+ - Neurobi..  |    1.19389   .4603619     0.46   0.646     .5605733    2.542709
+              |
+    stressesR |
+ - Caused ..  |   1.634636   .3690231     2.18   0.030     1.050015    2.544759
+              |
+    wayraiseR |
+ - Way x w..  |   1.041344   .1905268     0.22   0.825     .7274515     1.49068
+              |
+    charactrR |
+ - Bad cha..  |    1.31434   .2331375     1.54   0.123     .9282628    1.860992
+     seriousp |   1.633584   .2292779     3.50   0.000     1.240603    2.151048
+              |
+    dectreatR |
+ - Treatme..  |   .6192025   .1492787    -1.99   0.047     .3859705    .9933705
+              |
+    decmoneyR |
+ - Financi..  |   1.052497   .2484894     0.22   0.828     .6625046    1.672065
+              |
+     hurtothR |
+ - Likely ..  |   1.034928   .2195632     0.16   0.871     .6827542    1.568758
+              |
+    hurtselfR |
+ - Likely ..  |   1.505601   .3294818     1.87   0.062     .9803306    2.312317
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   3.193013   1.968057     1.88   0.060     .9536184    10.69121
+        1996 #|
+ - Alcohol..  |   2.185768   1.576968     1.08   0.279     .5312274    8.993479
+        1996 #|
+ - Schizop..  |   1.106142   .9917496     0.11   0.910      .190713    6.415663
+        1996 #|
+ - Drug Pr..  |   .8261202    .634648    -0.25   0.804     .1831923    3.725455
+        2006 #|
+ - Depress..  |   1.153124   .6909224     0.24   0.812      .356194    3.733066
+        2006 #|
+ - Alcohol..  |   .7999446   .5810874    -0.31   0.759     .1925444    3.323448
+        2006 #|
+ - Schizop..  |   .4071571   .3666068    -1.00   0.318      .069675    2.379289
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   5.785181   3.612642     2.81   0.005     1.700563    19.68073
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0146519   .0235049    -0.62   0.533    -.0607362    .0314324
+       2006  |  -.0450895   .0248807    -1.81   0.070    -.0938711    .0036922
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit dangrothR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==3
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.21
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .2341316   .0936013    -3.63   0.000     .1069182     .512706
+        2006  |   .4115097   .1697125    -2.15   0.031     .1833218    .9237319
+              |
+      vigver2 |
+ - Depress..  |   .3396351   .1896958    -1.93   0.053     .1136141    1.015296
+ - Alcohol..  |   .3130871   .2202735    -1.65   0.099      .078813    1.243748
+ - Schizop..  |    .744263   .6620539    -0.33   0.740     .1301042    4.257567
+ - Drug Pr..  |   .8876723   .6542485    -0.16   0.872     .2092538     3.76558
+              |
+       female |
+    - Female  |    1.08321   .1815919     0.48   0.634     .7797711    1.504728
+              |
+        black |
+       black  |   .5909011   .1431423    -2.17   0.030     .3674911    .9501293
+              |
+      ed_gths |
+ - Greater..  |   1.166186   .2042926     0.88   0.380     .8271878    1.644113
+          age |   .9986882   .0048471    -0.27   0.787       .98923    1.008237
+              |
+      vigmale |
+      - Male  |   .9462002   .1605079    -0.33   0.744      .678487    1.319546
+              |
+      vigrace |
+     - Black  |   1.014381    .209102     0.07   0.945     .6771386    1.519584
+  - Hispanic  |   .9448511   .1847474    -0.29   0.772     .6439785    1.386294
+              |
+        viged |
+ - High Sc..  |   1.079342   .2204592     0.37   0.709     .7231693    1.610936
+   - College  |    1.17746   .2471601     0.78   0.436     .7802083    1.776976
+              |
+    mentlillR |
+ - Mental ..  |   1.441963   .5476019     0.96   0.335     .6848443    3.036102
+              |
+       neurob |
+ - Neurobi..  |    1.19389   .4603619     0.46   0.646     .5605733    2.542709
+              |
+    stressesR |
+ - Caused ..  |   1.634636   .3690231     2.18   0.030     1.050015    2.544759
+              |
+    wayraiseR |
+ - Way x w..  |   1.041344   .1905268     0.22   0.825     .7274515     1.49068
+              |
+    charactrR |
+ - Bad cha..  |    1.31434   .2331375     1.54   0.123     .9282628    1.860992
+     seriousp |   1.633584   .2292779     3.50   0.000     1.240603    2.151048
+              |
+    dectreatR |
+ - Treatme..  |   .6192025   .1492787    -1.99   0.047     .3859705    .9933705
+              |
+    decmoneyR |
+ - Financi..  |   1.052497   .2484894     0.22   0.828     .6625046    1.672065
+              |
+     hurtothR |
+ - Likely ..  |   1.034928   .2195632     0.16   0.871     .6827542    1.568758
+              |
+    hurtselfR |
+ - Likely ..  |   1.505601   .3294818     1.87   0.062     .9803306    2.312317
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   3.193013   1.968057     1.88   0.060     .9536184    10.69121
+        1996 #|
+ - Alcohol..  |   2.185768   1.576968     1.08   0.279     .5312274    8.993479
+        1996 #|
+ - Schizop..  |   1.106142   .9917496     0.11   0.910      .190713    6.415663
+        1996 #|
+ - Drug Pr..  |   .8261202    .634648    -0.25   0.804     .1831923    3.725455
+        2006 #|
+ - Depress..  |   1.153124   .6909224     0.24   0.812      .356194    3.733066
+        2006 #|
+ - Alcohol..  |   .7999446   .5810874    -0.31   0.759     .1925444    3.323448
+        2006 #|
+ - Schizop..  |   .4071571   .3666068    -1.00   0.318      .069675    2.379289
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   5.785181   3.612642     2.81   0.005     1.700563    19.68073
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0417838    .034726    -1.20   0.229    -.1098685    .0263009
+       2006  |  -.0821278   .0385294    -2.13   0.033    -.1576696   -.0065861
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit dangrothR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==4
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.21
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrothR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |   .2341316   .0936013    -3.63   0.000     .1069182     .512706
+        2006  |   .4115097   .1697125    -2.15   0.031     .1833218    .9237319
+              |
+      vigver2 |
+ - Depress..  |   .3396351   .1896958    -1.93   0.053     .1136141    1.015296
+ - Alcohol..  |   .3130871   .2202735    -1.65   0.099      .078813    1.243748
+ - Schizop..  |    .744263   .6620539    -0.33   0.740     .1301042    4.257567
+ - Drug Pr..  |   .8876723   .6542485    -0.16   0.872     .2092538     3.76558
+              |
+       female |
+    - Female  |    1.08321   .1815919     0.48   0.634     .7797711    1.504728
+              |
+        black |
+       black  |   .5909011   .1431423    -2.17   0.030     .3674911    .9501293
+              |
+      ed_gths |
+ - Greater..  |   1.166186   .2042926     0.88   0.380     .8271878    1.644113
+          age |   .9986882   .0048471    -0.27   0.787       .98923    1.008237
+              |
+      vigmale |
+      - Male  |   .9462002   .1605079    -0.33   0.744      .678487    1.319546
+              |
+      vigrace |
+     - Black  |   1.014381    .209102     0.07   0.945     .6771386    1.519584
+  - Hispanic  |   .9448511   .1847474    -0.29   0.772     .6439785    1.386294
+              |
+        viged |
+ - High Sc..  |   1.079342   .2204592     0.37   0.709     .7231693    1.610936
+   - College  |    1.17746   .2471601     0.78   0.436     .7802083    1.776976
+              |
+    mentlillR |
+ - Mental ..  |   1.441963   .5476019     0.96   0.335     .6848443    3.036102
+              |
+       neurob |
+ - Neurobi..  |    1.19389   .4603619     0.46   0.646     .5605733    2.542709
+              |
+    stressesR |
+ - Caused ..  |   1.634636   .3690231     2.18   0.030     1.050015    2.544759
+              |
+    wayraiseR |
+ - Way x w..  |   1.041344   .1905268     0.22   0.825     .7274515     1.49068
+              |
+    charactrR |
+ - Bad cha..  |    1.31434   .2331375     1.54   0.123     .9282628    1.860992
+     seriousp |   1.633584   .2292779     3.50   0.000     1.240603    2.151048
+              |
+    dectreatR |
+ - Treatme..  |   .6192025   .1492787    -1.99   0.047     .3859705    .9933705
+              |
+    decmoneyR |
+ - Financi..  |   1.052497   .2484894     0.22   0.828     .6625046    1.672065
+              |
+     hurtothR |
+ - Likely ..  |   1.034928   .2195632     0.16   0.871     .6827542    1.568758
+              |
+    hurtselfR |
+ - Likely ..  |   1.505601   .3294818     1.87   0.062     .9803306    2.312317
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |   3.193013   1.968057     1.88   0.060     .9536184    10.69121
+        1996 #|
+ - Alcohol..  |   2.185768   1.576968     1.08   0.279     .5312274    8.993479
+        1996 #|
+ - Schizop..  |   1.106142   .9917496     0.11   0.910      .190713    6.415663
+        1996 #|
+ - Drug Pr..  |   .8261202    .634648    -0.25   0.804     .1831923    3.725455
+        2006 #|
+ - Depress..  |   1.153124   .6909224     0.24   0.812      .356194    3.733066
+        2006 #|
+ - Alcohol..  |   .7999446   .5810874    -0.31   0.759     .1925444    3.323448
+        2006 #|
+ - Schizop..  |   .4071571   .3666068    -1.00   0.318      .069675    2.379289
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |   5.785181   3.612642     2.81   0.005     1.700563    19.68073
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrothR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0576118   .0281347    -2.05   0.041    -.1127733   -.0024503
+       2006  |  -.0927736   .0359381    -2.58   0.010    -.1632346   -.0223126
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+logit dangrslfR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==1
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.64
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrslfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |     .18757   .0774824    -4.05   0.000       .08345    .4215998
+        2006  |   .3064646   .1249343    -2.90   0.004     .1378035    .6815545
+              |
+      vigver2 |
+ - Depress..  |   .2786698   .1414618    -2.52   0.012     .1030024     .753933
+ - Alcohol..  |   .3422114   .2076239    -1.77   0.077     .1041565    1.124353
+ - Schizop..  |   .4475482   .2716086    -1.32   0.185      .136172    1.470929
+ - Drug Pr..  |   .9405953   .5867605    -0.10   0.922     .2768402    3.195777
+              |
+       female |
+    - Female  |   1.263131   .1700858     1.73   0.083     .9700454    1.644769
+              |
+        black |
+       black  |   .8478549   .1864562    -0.75   0.453     .5508919    1.304898
+              |
+      ed_gths |
+ - Greater..  |   .8990418   .1260724    -0.76   0.448     .6829296    1.183542
+          age |   .9956712   .0038317    -1.13   0.260     .9881869    1.003212
+              |
+      vigmale |
+      - Male  |   .9887036   .1358266    -0.08   0.934     .7552487    1.294322
+              |
+      vigrace |
+     - Black  |   .8360651   .1353131    -1.11   0.269     .6087386    1.148284
+  - Hispanic  |    1.01487   .1663179     0.09   0.928     .7359833    1.399437
+              |
+        viged |
+ - High Sc..  |   1.076284   .1839064     0.43   0.667     .7698955    1.504604
+   - College  |   .8551179   .1456085    -0.92   0.358     .6124006    1.194033
+              |
+    mentlillR |
+ - Mental ..  |   1.618633   .5124915     1.52   0.128     .8700626    3.011248
+              |
+       neurob |
+ - Neurobi..  |   .9776716   .3116731    -0.07   0.944     .5232945    1.826585
+              |
+    stressesR |
+ - Caused ..  |   1.559676   .2874562     2.41   0.016     1.086678    2.238556
+              |
+    wayraiseR |
+ - Way x w..  |   1.192454   .1742893     1.20   0.229     .8953399    1.588164
+              |
+    charactrR |
+ - Bad cha..  |   1.160887   .1664857     1.04   0.298     .8763462    1.537814
+     seriousp |   1.352059    .165288     2.47   0.014     1.063903    1.718261
+              |
+    dectreatR |
+ - Treatme..  |   .6487482   .1285213    -2.18   0.029     .4399374    .9566685
+              |
+    decmoneyR |
+ - Financi..  |   1.011553   .1942811     0.06   0.952     .6941446    1.474101
+              |
+     hurtothR |
+ - Likely ..  |   1.182655   .1965339     1.01   0.313     .8538029    1.638168
+              |
+    hurtselfR |
+ - Likely ..  |   1.621694   .2742417     2.86   0.004      1.16406    2.259241
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |    3.46155   1.891128     2.27   0.023     1.185994     10.1032
+        1996 #|
+ - Alcohol..  |   2.013118   1.253247     1.12   0.261     .5939962    6.822675
+        1996 #|
+ - Schizop..  |   1.381278   .8825225     0.51   0.613     .3946848    4.834054
+        1996 #|
+ - Drug Pr..  |   1.042272   .6808611     0.06   0.949     .2895671     3.75157
+        2006 #|
+ - Depress..  |   1.868794   .9908785     1.18   0.238      .660819    5.284943
+        2006 #|
+ - Alcohol..  |   1.024461   .6406824     0.04   0.969     .3005991    3.491428
+        2006 #|
+ - Schizop..  |   1.043972   .6789771     0.07   0.947     .2916754    3.736615
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |    9.08491   5.080916     3.95   0.000     3.034653     27.1977
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrslfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0840967   .0204812    -4.11   0.000    -.1242526   -.0439408
+       2006  |  -.0470749    .014326    -3.29   0.001    -.0751627   -.0189871
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit dangrslfR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==2
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.64
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrslfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |     .18757   .0774824    -4.05   0.000       .08345    .4215998
+        2006  |   .3064646   .1249343    -2.90   0.004     .1378035    .6815545
+              |
+      vigver2 |
+ - Depress..  |   .2786698   .1414618    -2.52   0.012     .1030024     .753933
+ - Alcohol..  |   .3422114   .2076239    -1.77   0.077     .1041565    1.124353
+ - Schizop..  |   .4475482   .2716086    -1.32   0.185      .136172    1.470929
+ - Drug Pr..  |   .9405953   .5867605    -0.10   0.922     .2768402    3.195777
+              |
+       female |
+    - Female  |   1.263131   .1700858     1.73   0.083     .9700454    1.644769
+              |
+        black |
+       black  |   .8478549   .1864562    -0.75   0.453     .5508919    1.304898
+              |
+      ed_gths |
+ - Greater..  |   .8990418   .1260724    -0.76   0.448     .6829296    1.183542
+          age |   .9956712   .0038317    -1.13   0.260     .9881869    1.003212
+              |
+      vigmale |
+      - Male  |   .9887036   .1358266    -0.08   0.934     .7552487    1.294322
+              |
+      vigrace |
+     - Black  |   .8360651   .1353131    -1.11   0.269     .6087386    1.148284
+  - Hispanic  |    1.01487   .1663179     0.09   0.928     .7359833    1.399437
+              |
+        viged |
+ - High Sc..  |   1.076284   .1839064     0.43   0.667     .7698955    1.504604
+   - College  |   .8551179   .1456085    -0.92   0.358     .6124006    1.194033
+              |
+    mentlillR |
+ - Mental ..  |   1.618633   .5124915     1.52   0.128     .8700626    3.011248
+              |
+       neurob |
+ - Neurobi..  |   .9776716   .3116731    -0.07   0.944     .5232945    1.826585
+              |
+    stressesR |
+ - Caused ..  |   1.559676   .2874562     2.41   0.016     1.086678    2.238556
+              |
+    wayraiseR |
+ - Way x w..  |   1.192454   .1742893     1.20   0.229     .8953399    1.588164
+              |
+    charactrR |
+ - Bad cha..  |   1.160887   .1664857     1.04   0.298     .8763462    1.537814
+     seriousp |   1.352059    .165288     2.47   0.014     1.063903    1.718261
+              |
+    dectreatR |
+ - Treatme..  |   .6487482   .1285213    -2.18   0.029     .4399374    .9566685
+              |
+    decmoneyR |
+ - Financi..  |   1.011553   .1942811     0.06   0.952     .6941446    1.474101
+              |
+     hurtothR |
+ - Likely ..  |   1.182655   .1965339     1.01   0.313     .8538029    1.638168
+              |
+    hurtselfR |
+ - Likely ..  |   1.621694   .2742417     2.86   0.004      1.16406    2.259241
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |    3.46155   1.891128     2.27   0.023     1.185994     10.1032
+        1996 #|
+ - Alcohol..  |   2.013118   1.253247     1.12   0.261     .5939962    6.822675
+        1996 #|
+ - Schizop..  |   1.381278   .8825225     0.51   0.613     .3946848    4.834054
+        1996 #|
+ - Drug Pr..  |   1.042272   .6808611     0.06   0.949     .2895671     3.75157
+        2006 #|
+ - Depress..  |   1.868794   .9908785     1.18   0.238      .660819    5.284943
+        2006 #|
+ - Alcohol..  |   1.024461   .6406824     0.04   0.969     .3005991    3.491428
+        2006 #|
+ - Schizop..  |   1.043972   .6789771     0.07   0.947     .2916754    3.736615
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |    9.08491   5.080916     3.95   0.000     3.034653     27.1977
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrslfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 2
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.0341273   .0284288    -1.20   0.230    -.0898655    .0216108
+       2006  |  -.0461323   .0273308    -1.69   0.092    -.0997178    .0074532
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit dangrslfR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==3
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.64
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrslfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |     .18757   .0774824    -4.05   0.000       .08345    .4215998
+        2006  |   .3064646   .1249343    -2.90   0.004     .1378035    .6815545
+              |
+      vigver2 |
+ - Depress..  |   .2786698   .1414618    -2.52   0.012     .1030024     .753933
+ - Alcohol..  |   .3422114   .2076239    -1.77   0.077     .1041565    1.124353
+ - Schizop..  |   .4475482   .2716086    -1.32   0.185      .136172    1.470929
+ - Drug Pr..  |   .9405953   .5867605    -0.10   0.922     .2768402    3.195777
+              |
+       female |
+    - Female  |   1.263131   .1700858     1.73   0.083     .9700454    1.644769
+              |
+        black |
+       black  |   .8478549   .1864562    -0.75   0.453     .5508919    1.304898
+              |
+      ed_gths |
+ - Greater..  |   .8990418   .1260724    -0.76   0.448     .6829296    1.183542
+          age |   .9956712   .0038317    -1.13   0.260     .9881869    1.003212
+              |
+      vigmale |
+      - Male  |   .9887036   .1358266    -0.08   0.934     .7552487    1.294322
+              |
+      vigrace |
+     - Black  |   .8360651   .1353131    -1.11   0.269     .6087386    1.148284
+  - Hispanic  |    1.01487   .1663179     0.09   0.928     .7359833    1.399437
+              |
+        viged |
+ - High Sc..  |   1.076284   .1839064     0.43   0.667     .7698955    1.504604
+   - College  |   .8551179   .1456085    -0.92   0.358     .6124006    1.194033
+              |
+    mentlillR |
+ - Mental ..  |   1.618633   .5124915     1.52   0.128     .8700626    3.011248
+              |
+       neurob |
+ - Neurobi..  |   .9776716   .3116731    -0.07   0.944     .5232945    1.826585
+              |
+    stressesR |
+ - Caused ..  |   1.559676   .2874562     2.41   0.016     1.086678    2.238556
+              |
+    wayraiseR |
+ - Way x w..  |   1.192454   .1742893     1.20   0.229     .8953399    1.588164
+              |
+    charactrR |
+ - Bad cha..  |   1.160887   .1664857     1.04   0.298     .8763462    1.537814
+     seriousp |   1.352059    .165288     2.47   0.014     1.063903    1.718261
+              |
+    dectreatR |
+ - Treatme..  |   .6487482   .1285213    -2.18   0.029     .4399374    .9566685
+              |
+    decmoneyR |
+ - Financi..  |   1.011553   .1942811     0.06   0.952     .6941446    1.474101
+              |
+     hurtothR |
+ - Likely ..  |   1.182655   .1965339     1.01   0.313     .8538029    1.638168
+              |
+    hurtselfR |
+ - Likely ..  |   1.621694   .2742417     2.86   0.004      1.16406    2.259241
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |    3.46155   1.891128     2.27   0.023     1.185994     10.1032
+        1996 #|
+ - Alcohol..  |   2.013118   1.253247     1.12   0.261     .5939962    6.822675
+        1996 #|
+ - Schizop..  |   1.381278   .8825225     0.51   0.613     .3946848    4.834054
+        1996 #|
+ - Drug Pr..  |   1.042272   .6808611     0.06   0.949     .2895671     3.75157
+        2006 #|
+ - Depress..  |   1.868794   .9908785     1.18   0.238      .660819    5.284943
+        2006 #|
+ - Alcohol..  |   1.024461   .6406824     0.04   0.969     .3005991    3.491428
+        2006 #|
+ - Schizop..  |   1.043972   .6789771     0.07   0.947     .2916754    3.736615
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |    9.08491   5.080916     3.95   0.000     3.034653     27.1977
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrslfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 3
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |   -.081423   .0355825    -2.29   0.022    -.1511869   -.0116592
+       2006  |  -.1036358   .0378205    -2.74   0.006    -.1777875   -.0294842
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+logit dangrslfR i.year1 i.female i.black i.ed_gths c.age i.mentlillR i.neurob i.
+> stressesR i.wayraiseR i.charactrR c.seriousp i.dectreatR i.decmoneyR i.hurtoth
+> R i.hurtselfR if vigver2==4
+(running logit on estimation sample)
+
+note: 2.year1#5.vigver2 != 0 predicts failure perfectly;
+      2.year1#5.vigver2 omitted and 0 obs not used.
+
+Survey: Logistic regression
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+                                                  Design df       =      3,599
+                                                  F(32, 3568)     =       4.64
+                                                  Prob > F        =     0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+    dangrslfR | Odds ratio   std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+        year1 |
+        1996  |     .18757   .0774824    -4.05   0.000       .08345    .4215998
+        2006  |   .3064646   .1249343    -2.90   0.004     .1378035    .6815545
+              |
+      vigver2 |
+ - Depress..  |   .2786698   .1414618    -2.52   0.012     .1030024     .753933
+ - Alcohol..  |   .3422114   .2076239    -1.77   0.077     .1041565    1.124353
+ - Schizop..  |   .4475482   .2716086    -1.32   0.185      .136172    1.470929
+ - Drug Pr..  |   .9405953   .5867605    -0.10   0.922     .2768402    3.195777
+              |
+       female |
+    - Female  |   1.263131   .1700858     1.73   0.083     .9700454    1.644769
+              |
+        black |
+       black  |   .8478549   .1864562    -0.75   0.453     .5508919    1.304898
+              |
+      ed_gths |
+ - Greater..  |   .8990418   .1260724    -0.76   0.448     .6829296    1.183542
+          age |   .9956712   .0038317    -1.13   0.260     .9881869    1.003212
+              |
+      vigmale |
+      - Male  |   .9887036   .1358266    -0.08   0.934     .7552487    1.294322
+              |
+      vigrace |
+     - Black  |   .8360651   .1353131    -1.11   0.269     .6087386    1.148284
+  - Hispanic  |    1.01487   .1663179     0.09   0.928     .7359833    1.399437
+              |
+        viged |
+ - High Sc..  |   1.076284   .1839064     0.43   0.667     .7698955    1.504604
+   - College  |   .8551179   .1456085    -0.92   0.358     .6124006    1.194033
+              |
+    mentlillR |
+ - Mental ..  |   1.618633   .5124915     1.52   0.128     .8700626    3.011248
+              |
+       neurob |
+ - Neurobi..  |   .9776716   .3116731    -0.07   0.944     .5232945    1.826585
+              |
+    stressesR |
+ - Caused ..  |   1.559676   .2874562     2.41   0.016     1.086678    2.238556
+              |
+    wayraiseR |
+ - Way x w..  |   1.192454   .1742893     1.20   0.229     .8953399    1.588164
+              |
+    charactrR |
+ - Bad cha..  |   1.160887   .1664857     1.04   0.298     .8763462    1.537814
+     seriousp |   1.352059    .165288     2.47   0.014     1.063903    1.718261
+              |
+    dectreatR |
+ - Treatme..  |   .6487482   .1285213    -2.18   0.029     .4399374    .9566685
+              |
+    decmoneyR |
+ - Financi..  |   1.011553   .1942811     0.06   0.952     .6941446    1.474101
+              |
+     hurtothR |
+ - Likely ..  |   1.182655   .1965339     1.01   0.313     .8538029    1.638168
+              |
+    hurtselfR |
+ - Likely ..  |   1.621694   .2742417     2.86   0.004      1.16406    2.259241
+              |
+year1#vigver2 |
+        1996 #|
+ - Depress..  |    3.46155   1.891128     2.27   0.023     1.185994     10.1032
+        1996 #|
+ - Alcohol..  |   2.013118   1.253247     1.12   0.261     .5939962    6.822675
+        1996 #|
+ - Schizop..  |   1.381278   .8825225     0.51   0.613     .3946848    4.834054
+        1996 #|
+ - Drug Pr..  |   1.042272   .6808611     0.06   0.949     .2895671     3.75157
+        2006 #|
+ - Depress..  |   1.868794   .9908785     1.18   0.238      .660819    5.284943
+        2006 #|
+ - Alcohol..  |   1.024461   .6406824     0.04   0.969     .3005991    3.491428
+        2006 #|
+ - Schizop..  |   1.043972   .6789771     0.07   0.947     .2916754    3.736615
+        2006 #|
+ - Drug Pr..  |          1  (empty)
+              |
+        _cons |    9.08491   5.080916     3.95   0.000     3.034653     27.1977
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+Average marginal effects
+
+Number of strata =     1                          Number of obs   =      3,600
+Number of PSUs   = 3,600                          Population size = 3,618.7465
+Model VCE: Linearized                             Design df       =      3,599
+
+Expression: Pr(dangrslfR), predict()
+dy/dx wrt:  1.year1 2.year1
+At: vigver2 = 4
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       year1 |
+       1996  |  -.1079753   .0356285    -3.03   0.002    -.1778294   -.0381212
+       2006  |  -.0838985   .0362701    -2.31   0.021    -.1550104   -.0127865
+------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+.         
+.         
+.         coefplot(hurtothRdt2, label("daily troubles") mc(midgreen))           
+>    ///
+>                         (hurtothRdep2, label("depression") mc(blue))          
+>            ///
+>                         (hurtothRalc2, label("alcohol dependence") mc(gs0) msy
+> m(d))      ///
+>                         (hurtothRschiz2, label("schizophrenia") mc(cranberry))
+>            ///
+>                         , bylabel("A: Likely to Hurt Others")                 
+>               ///
+>                         || (hurtselfRdt2, label("daily troubles") mc(midgreen)
+> )          ///
+>                         (hurtselfRdep2, label("depression") mc(blue))         
+>            ///
+>                         (hurtselfRalc2, label("alcohol dependence") mc(gs0) ms
+> ym(d))     ///
+>                         (hurtselfRschiz2, label("schizophrenia") mc(cranberry)
+> )          ///
+>                         , bylabel("B: Likely to Hurt Self")                   
+>                                            ///
+>                     || (mustmedRdt2, label("daily troubles") mc(midgreen))    
+>        ///
+>                 (mustmedRdep2, label("depression") mc(blue))                  
+>    ///
+>                 (mustmedRalc2, label("alcohol dependence") mc(gs0) msym(d))   
+>    ///
+>                         (mustmedRschiz2, label("schizophrenia") mc(cranberry))
+>            ///
+>                         , bylabel("C: Coercion to take Medication")           
+>               /// 
+>                         ||  (mustdocRdt2, label("daily troubles") mc(midgreen)
+> )          ///
+>                         (mustdocRdep2, label("depression") mc(blue))          
+>            ///
+>                 (mustdocRalc2, label("alcohol dependence") mc(gs0) msym(d))   
+>    ///
+>                         (mustdocRschiz2, label("schizophrenia") mc(cranberry))
+>            ///
+>                         , bylabel("D: Coercion to see MD")                    
+>               /// 
+>                         || (musthospRdt2, label("daily troubles") mc(midgreen)
+> )          ///
+>                         (musthospRdep2, label("depression") mc(blue))         
+>            ///
+>                 (musthospRalc2, label("alcohol dependence") mc(gs0) msym(d))  
+>    ///
+>                         (musthospRschiz2, label("schizophrenia") mc(cranberry)
+> )          ///
+>                         , bylabel("E: Coercion to be Hospitalized")           
+>               ///                                         
+>                         || , drop(1.female 1.black 1.ed_gths age 1.vigmale    
+>            ///
+>                          1.vigrace 2.vigrace 1.viged 2.viged 1.neurob 1.mentli
+> llR        ///
+>                          1.vigver2 2.vigver2 3.vigver2 4.vigver2              
+>            ///
+>                          1.stressesR 1.wayraiseR 1.charactrR seriousp         
+>            ///
+>                          1.dectreatR 1.decmoneyR)      horizontal xline(0) rec
+> ast(scatter)   ///
+>                          xline(0) xlab(-.5(.1).5) ciop(col(gs12)) ysize(14) xs
+> ize(9)     ///
+>                          legend(order(6 8) row(1) margin(none))               
+>            ///
+>                          subtitle(, size(medsmall) margin(tiny) justification(
+> left)      ///
+>              color(white) bcolor(black))                                     /
+> //
+>                          byopts(compact cols(1) title("AMEs 1996 and 2006 vs 2
+> 018", size(medsmall))) ///
+>                          name(b4)                         
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+(note:  named style none not found in class margin, default attributes used)
+
+.                                                        
+.                          
+.         
+.         
+.         graph combine a5 b4, xsize(20) ysize(20) imargin(tiny) ///
+>                  title("Appendix Exhibit A5. Marginal effects of mental disord
+> ers on perceived potential" ///
+>                                "for violence and endorsement of coerced treatm
+> ent, 1996, 2006, and 2018", size(small)) ///
+>                      note("NOTE: Adjusted average marginal effect in predicted
+>  probability of dependent variable in the years listed"  ///
+>                               "on the side compared to omitted year. Positive 
+> values indicate an outcome was more likely for each" ///
+>                                   "year compared to omitted, negative values i
+> ndicate the reverse. Lines indicate 95% confidence interval" ///
+>                                   "around the average marginal effect. Values 
+> are derived from logistic regression in Appendix Exhibit A3," ///
+>                                   "available online." ///
+>                                   " " ///
+>                                   "SOURCE: Authors’ analysis of data from the 
+> National Stigma Studies, 1996, 2006, and 2018.", size(vsmall) justification(le
+> ft))
+a5 is not a memory graph
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/0q/bm173hcd3njdqf9ys85jv3700000gn/T//SD31433.000000"
+
+. capture log close

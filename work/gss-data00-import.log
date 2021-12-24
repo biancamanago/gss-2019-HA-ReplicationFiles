@@ -1,0 +1,1033 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/biancamanago/Dropbox/_AcademicWork/Vault/Research/- PUBLISHE
+> D/GSS-Health Affair Analyses/- posted/Analyses/gss-data00-import.log
+  log type:  text
+ opened on:  23 Dec 2021, 19:51:08
+
+.  
+.  version 15.1
+
+.  set linesize 80
+
+.  clear all
+
+.  macro drop _all
+
+. 
+.  
+.  local pgm   gss-data00-import.do
+
+.  local dte   2019-04-12
+
+.  local who   bianca manago 
+
+.  local tag   "`pgm'.do `who' `dte'"
+
+.  
+.  di "`tag'"
+gss-data00-import.do.do bianca manago 2019-04-12
+
+.  
+.  global      data "_data/1972-2018 Cumulative-Downloaded-from-NORC-2019-03-20"
+
+.  
+. ***************************************
+. * STEP 1: Select variables and sample *
+. ***************************************
+. 
+. local vars "year id ballot version form issp formwt cohort sampcode sample"
+
+. local vars "`vars' oversamp phase wtss wtssnr wtssall vstrat vpsu"
+
+. local vars "`vars' sex age race educ degree"
+
+. local vars "`vars' seriousp charactr imbalnce wayraise stresses genetics godsw
+> ill"
+
+. local vars "`vars' upsdowns breakdwn mentlill physill viglabel"
+
+. local vars "`vars' vignei vigsoc vigfrnd vigwork viggrp vigmar"
+
+. local vars "`vars' hurtoth hurtself meddoc mentldoc mentloth imprvown imprvtrt
+>  "
+
+. local vars "`vars' selfhelp otcmed rxmed mentlhos ortlkfm ortlkclr ormeddoc"
+
+. local vars "`vars' mustdoc mustmed musthosp dangrslf dangroth medcare1 medcare
+> 2"
+
+. local vars "`vars' vigversn dectreat decmoney diagnosd mhdiagno"
+
+. local contact "evmhp mhdiagno diagnosd mhtreatd"
+
+. local contact "`contact' knwmhosp knwpatnt"
+
+. local vars    "`vars' `contact'"
+
+. 
+. ** disabld5 mhtrtot2 mhtrtslf 
+. 
+. local year "year == 1996 | year == 2006 | year == 2018"
+
+. 
+. // Read in select vars
+. 
+. use `vars' if `year' using "$data/GSS7218_R1", clear
+
+. 
+. 
+. // Keep Rs who received the mental health module
+. // In 2018, the module was included on Ballot B (form Y only) and Ballot C 
+. // (both forms)
+. 
+. 
+. keep if (year == 1996 & version<=6 & version >= 4) | ///
+>         (year == 2006 & version<=3 & version >= 1) | ///
+>                 (year == 2018 & version==3) | (year == 2018 & ballot==2 & form
+>  == 2 ) 
+(5,622 observations deleted)
+
+.                 
+. ***************************************
+. * STEP 2: Replicate 2006 AJP recodes  *
+. ***************************************
+. 
+. // Recode vignettes (first individually by year, and then across years)
+.         
+. g vigver96 = vigversn if year == 1996
+(2,696 missing values generated)
+
+. recode vigver96 (1/18=1) (19/36=2) (37/54=3) (73/90=4) (55/72=5)
+(1429 changes made to vigver96)
+
+.         la var vigver96 "Vignette? (1996)"
+
+.         la de vigver96 1 "Alcohol" 2 "Depression" ///
+>                 3 "Schizophrenia" 4 "Daily Troubles" 5 "Drug Problem" `miss'
+
+.         la val vigver96 vigver96
+
+. ta vigver96 , m
+
+     Vignette? |
+        (1996) |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Alcohol |        280        6.76        6.76
+    Depression |        300        7.25       14.01
+ Schizophrenia |        301        7.27       21.28
+Daily Troubles |        271        6.55       27.83
+  Drug Problem |        292        7.05       34.88
+             . |      2,696       65.12      100.00
+---------------+-----------------------------------
+         Total |      4,140      100.00
+
+. 
+. g vigver06 = vigversn if year == 2006
+(2,617 missing values generated)
+
+. recode vigver06 (1/18=1) (19/36=2) (37/54=3) (73/90=4) (55/72=.)
+(1501 changes made to vigver06)
+
+.         la var vigver06 "Vignette? (2006)"
+
+.         la de vigver06 1 "Alcohol" 2 "Depression" ///
+>                 3 "Schizophrenia" 4 "Daily Troubles" `miss'
+
+.         la val vigver06 vigver06
+
+. ta vigver06 , m
+
+     Vignette? |
+        (2006) |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Alcohol |        377        9.11        9.11
+    Depression |        397        9.59       18.70
+ Schizophrenia |        373        9.01       27.71
+Daily Troubles |        376        9.08       36.79
+             . |      2,617       63.21      100.00
+---------------+-----------------------------------
+         Total |      4,140      100.00
+
+. 
+. g vigver18 = vigversn if year == 2018
+(2,967 missing values generated)
+
+. recode vigver18 (1/18=1) (19/36=2) (37/54=3) (73/90=4) (55/72=5)
+(1161 changes made to vigver18)
+
+.         la var vigver18 "Vignette? (2018)"
+
+.         la de vigver18 1 "Alcohol" 2 "Depression" ///
+>                 3 "Schizophrenia" 4 "Daily Troubles" 5 "Drug Problem" `miss'
+
+.         la value vigver18 vigver18
+
+. ta vigver18 , m
+
+     Vignette? |
+        (2018) |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Alcohol |        249        6.01        6.01
+    Depression |        251        6.06       12.08
+ Schizophrenia |        229        5.53       17.61
+Daily Troubles |        217        5.24       22.85
+  Drug Problem |        227        5.48       28.33
+             . |      2,967       71.67      100.00
+---------------+-----------------------------------
+         Total |      4,140      100.00
+
+. 
+. g vigver = .
+(4,140 missing values generated)
+
+. replace vigver = vigver96 if year == 1996
+(1,444 real changes made)
+
+. replace vigver = vigver06 if year == 2006
+(1,523 real changes made)
+
+. replace vigver = vigver18 if year == 2018
+(1,173 real changes made)
+
+.         la val vigver vigver18
+
+.         la var vigver "Vignette? (96, 06, 18)"
+
+.         
+. recode year (1996=0 "1996") (2006=1 "2006") (2018=2 "2018"), gen(year1)
+(4140 differences between year and year1)
+
+. drop year
+
+. rename year1 year       
+
+. 
+. label var year "Year of GSS"
+
+. 
+. recode vigversn (1/9 19/27 37/45 55/63 73/81=1   " - Male") ///
+>                 (10/18 28/36 46/54 64/72 82/90=0 " - Female"), gen(vigmale)
+(4091 differences between vigversn and vigmale)
+
+.                                 
+.         label var vigmale "Vignette is Male"                            
+
+.                                 
+. recode  vigversn (1 4 7 10 13 16 19 22 25 28 31 34 37 40 ///
+>                   43 46 49 52 55 58 61 64 67 70 73 76 79 ///
+>                                   82 85 88=0 " - White") ///
+>                  (2 5 8 11 14 17 20 23 26 29 32 35 38 41 ///
+>                                  44 47 50 53 56 59 62 65 68 71 74 77 80  ///
+>                                  83 86 89=1 " - Black") ///     
+>                                  (3 6 9 12 15 18 21 24 27 30 33 36 39 42 ///
+>                                  45 48 51 54 57 60 63 66 69 72 75 78 81  ///
+>                                  84 87 90=2 " - Hispanic"), gen(vigrace)
+(4140 differences between vigversn and vigrace)
+
+.                                  
+.         label var vigrace "Vignette Race (white omit)"
+
+.         
+. recode vigversn (1/3 10/12 19/21 28/30 37/39 46/48 55/57 ///
+>                 64/66 73/75 82/84=0 " - Less than H.S.")         ///
+>                 (4/6 13/15 22/24 31/33 40/42 49/51 58/60 ///
+>                                 67/69 76/78 85/87=1 " - High School")       //
+> /
+>                                 (7/9 16/18 25/27 34/36 43/45 52/54 61/63 ///
+>                                 70/72 79/81 88/90=2 " - College"), gen(viged)
+(4140 differences between vigversn and viged)
+
+.         
+.         label var viged "Vignette Education (Less than H.S. omit)"
+
+. 
+. // Recode VIGNETTES into dummies
+. 
+. ta vigver , gen(vig)
+
+Vignette? (96, |
+       06, 18) |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Alcohol |        906       21.88       21.88
+    Depression |        948       22.90       44.78
+ Schizophrenia |        903       21.81       66.59
+Daily Troubles |        864       20.87       87.46
+  Drug Problem |        519       12.54      100.00
+---------------+-----------------------------------
+         Total |      4,140      100.00
+
+. la define yesno 0 "0=no" 1 "1=yes" `miss'
+
+. rename vig1 vigalc
+
+. la var vigalc "Alcohol"
+
+. rename vig2 vigdep
+
+. la var vigdep "Depression"
+
+. rename vig3 vigschiz
+
+. la var vigschiz "Schizophrenia"
+
+. rename vig4 vignorm
+
+. la var vignorm "Daily Troubles"
+
+. rename vig5 vigdrug
+
+. la var vigdrug "Drug Problem"
+
+. 
+. unab vars: vigalc-vigdrug
+
+. foreach v in `vars' {
+  2.     la value `v' yesno
+  3.     ta vigver `v' , m
+  4. }
+
+Vignette? (96, |        Alcohol
+       06, 18) |      0=no      1=yes |     Total
+---------------+----------------------+----------
+       Alcohol |         0        906 |       906 
+    Depression |       948          0 |       948 
+ Schizophrenia |       903          0 |       903 
+Daily Troubles |       864          0 |       864 
+  Drug Problem |       519          0 |       519 
+---------------+----------------------+----------
+         Total |     3,234        906 |     4,140 
+
+Vignette? (96, |      Depression
+       06, 18) |      0=no      1=yes |     Total
+---------------+----------------------+----------
+       Alcohol |       906          0 |       906 
+    Depression |         0        948 |       948 
+ Schizophrenia |       903          0 |       903 
+Daily Troubles |       864          0 |       864 
+  Drug Problem |       519          0 |       519 
+---------------+----------------------+----------
+         Total |     3,192        948 |     4,140 
+
+Vignette? (96, |     Schizophrenia
+       06, 18) |      0=no      1=yes |     Total
+---------------+----------------------+----------
+       Alcohol |       906          0 |       906 
+    Depression |       948          0 |       948 
+ Schizophrenia |         0        903 |       903 
+Daily Troubles |       864          0 |       864 
+  Drug Problem |       519          0 |       519 
+---------------+----------------------+----------
+         Total |     3,237        903 |     4,140 
+
+Vignette? (96, |    Daily Troubles
+       06, 18) |      0=no      1=yes |     Total
+---------------+----------------------+----------
+       Alcohol |       906          0 |       906 
+    Depression |       948          0 |       948 
+ Schizophrenia |       903          0 |       903 
+Daily Troubles |         0        864 |       864 
+  Drug Problem |       519          0 |       519 
+---------------+----------------------+----------
+         Total |     3,276        864 |     4,140 
+
+Vignette? (96, |     Drug Problem
+       06, 18) |      0=no      1=yes |     Total
+---------------+----------------------+----------
+       Alcohol |       906          0 |       906 
+    Depression |       948          0 |       948 
+ Schizophrenia |       903          0 |       903 
+Daily Troubles |       864          0 |       864 
+  Drug Problem |         0        519 |       519 
+---------------+----------------------+----------
+         Total |     3,621        519 |     4,140 
+
+. 
+. // Recode ATTRIBUTIONS
+. // Very likely / somewhat likely = 1
+. // Not very likely / not at all likely / don't know = 0
+. 
+. unab vars:  upsdowns breakdwn mentlill physill imbalnce genetics ///
+>             stresses wayraise charactr godswill imprvown imprvtrt 
+
+.                         
+. foreach v in `vars' {
+  2.     g `v'R = `v'
+  3.     recode `v'R (1/2=1) (3/4=0) (.d=0)
+  4.     la value `v'R likely
+  5.     local varlbl : variable label `v' 
+  6.     la variable `v'R "Bin: `varlbl'"  
+  7.     ta `v' `v'R , m
+  8.    } 
+(219 missing values generated)
+(2823 changes made to upsdownsR)
+
+  how likely x is |
+     experiencing |
+           normal |  Bin: how likely x is experiencing normal
+ ups-and-downs of |            ups-and-downs of life
+             life |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0      1,163          0          0 |     1,163 
+  somewhat likely |         0      1,361          0          0 |     1,361 
+  not very likely |       843          0          0          0 |       843 
+not at all likely |       554          0          0          0 |       554 
+        DONT KNOW |        65          0          0          0 |        65 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         68 |        68 
+------------------+--------------------------------------------+----------
+            Total |     1,462      2,524         86         68 |     4,140 
+(285 missing values generated)
+(3262 changes made to breakdwnR)
+
+  how likely x is |  Bin: how likely x is experiencing nervous
+     experiencing |                  breakdown
+nervous breakdown |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        724          0          0 |       724 
+  somewhat likely |         0      1,451          0          0 |     1,451 
+  not very likely |     1,126          0          0          0 |     1,126 
+not at all likely |       554          0          0          0 |       554 
+        DONT KNOW |       131          0          0          0 |       131 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         68 |        68 
+------------------+--------------------------------------------+----------
+            Total |     1,811      2,175         86         68 |     4,140 
+(285 missing values generated)
+(3069 changes made to mentlillR)
+
+  how likely x is |  Bin: how likely x is experiencing mental
+     experiencing |                   illness
+   mental illness |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        918          0          0 |       918 
+  somewhat likely |         0      1,378          0          0 |     1,378 
+  not very likely |     1,056          0          0          0 |     1,056 
+not at all likely |       503          0          0          0 |       503 
+        DONT KNOW |       132          0          0          0 |       132 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         67 |        67 
+------------------+--------------------------------------------+----------
+            Total |     1,691      2,296         86         67 |     4,140 
+(295 missing values generated)
+(3455 changes made to physillR)
+
+  how likely x is | Bin: how likely x is experiencing physical
+     experiencing |                   illness
+ physical illness |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        525          0          0 |       525 
+  somewhat likely |         0      1,547          0          0 |     1,547 
+  not very likely |     1,214          0          0          0 |     1,214 
+not at all likely |       559          0          0          0 |       559 
+        DONT KNOW |       135          0          0          0 |       135 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         74 |        74 
+------------------+--------------------------------------------+----------
+            Total |     1,908      2,072         86         74 |     4,140 
+(346 missing values generated)
+(2972 changes made to imbalnceR)
+
+   how likely x s |
+ situation caused |   Bin: how likely x s situation caused by
+  by imbalance in |             imbalance in brain
+            brain |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0      1,024          0          0 |     1,024 
+  somewhat likely |         0      1,667          0          0 |     1,667 
+  not very likely |       724          0          0          0 |       724 
+not at all likely |       379          0          0          0 |       379 
+        DONT KNOW |       202          0          0          0 |       202 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         58 |        58 
+------------------+--------------------------------------------+----------
+            Total |     1,305      2,691         86         58 |     4,140 
+(309 missing values generated)
+(3472 changes made to geneticsR)
+
+   how likely x s |
+ situation caused |   Bin: how likely x s situation caused by
+       by genetic |               genetic problem
+          problem |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        523          0          0 |       523 
+  somewhat likely |         0      1,686          0          0 |     1,686 
+  not very likely |     1,038          0          0          0 |     1,038 
+not at all likely |       584          0          0          0 |       584 
+        DONT KNOW |       164          0          0          0 |       164 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         59 |        59 
+------------------+--------------------------------------------+----------
+            Total |     1,786      2,209         86         59 |     4,140 
+(232 missing values generated)
+(2545 changes made to stressesR)
+
+   how likely x s |   Bin: how likely x s situation caused by
+ situation caused |                   stress
+        by stress |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0      1,450          0          0 |     1,450 
+  somewhat likely |         0      2,018          0          0 |     2,018 
+  not very likely |       288          0          0          0 |       288 
+not at all likely |       152          0          0          0 |       152 
+        DONT KNOW |        87          0          0          0 |        87 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         59 |        59 
+------------------+--------------------------------------------+----------
+            Total |       527      3,468         86         59 |     4,140 
+(282 missing values generated)
+(3596 changes made to wayraiseR)
+
+   how likely x s | Bin: how likely x s situation caused by the
+ situation caused |                 way raised
+by the way raised |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        396          0          0 |       396 
+  somewhat likely |         0      1,545          0          0 |     1,545 
+  not very likely |     1,183          0          0          0 |     1,183 
+not at all likely |       734          0          0          0 |       734 
+        DONT KNOW |       134          0          0          0 |       134 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         62 |        62 
+------------------+--------------------------------------------+----------
+            Total |     2,051      1,941         86         62 |     4,140 
+(251 missing values generated)
+(3399 changes made to charactrR)
+
+   how likely x s | Bin: how likely x s situation caused by bad
+ situation caused |                 character 
+by bad character  |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        595          0          0 |       595 
+  somewhat likely |         0      1,110          0          0 |     1,110 
+  not very likely |     1,258          0          0          0 |     1,258 
+not at all likely |       926          0          0          0 |       926 
+        DONT KNOW |       105          0          0          0 |       105 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         60 |        60 
+------------------+--------------------------------------------+----------
+            Total |     2,289      1,705         86         60 |     4,140 
+(276 missing values generated)
+(3823 changes made to godswillR)
+
+   how likely x s | Bin: how likely x s situation caused by god
+ situation caused |                   s will
+    by god s will |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        169          0          0 |       169 
+  somewhat likely |         0        367          0          0 |       367 
+  not very likely |       969          0          0          0 |       969 
+not at all likely |     2,359          0          0          0 |     2,359 
+        DONT KNOW |       128          0          0          0 |       128 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         62 |        62 
+------------------+--------------------------------------------+----------
+            Total |     3,456        536         86         62 |     4,140 
+(248 missing values generated)
+(3658 changes made to imprvownR)
+
+   how likely x s |
+   situation will | Bin: how likely x s situation will improve
+   improve on its |                 on its own
+              own |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0        339          0          0 |       339 
+  somewhat likely |         0        827          0          0 |       827 
+somewhat unlikely |     1,256          0          0          0 |     1,256 
+not likely at all |     1,470          0          0          0 |     1,470 
+        DONT KNOW |       105          0          0          0 |       105 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         57 |        57 
+------------------+--------------------------------------------+----------
+            Total |     2,831      1,166         86         57 |     4,140 
+(264 missing values generated)
+(2053 changes made to imprvtrtR)
+
+   how likely x s |
+   situation will | Bin: how likely x s situation will improve
+     improve with |               with treatment
+        treatment |         0          1         .i         .n |     Total
+------------------+--------------------------------------------+----------
+      very likely |         0      1,940          0          0 |     1,940 
+  somewhat likely |         0      1,679          0          0 |     1,679 
+somewhat unlikely |       157          0          0          0 |       157 
+not likely at all |       100          0          0          0 |       100 
+        DONT KNOW |       117          0          0          0 |       117 
+              IAP |         0          0         86          0 |        86 
+               NA |         0          0          0         61 |        61 
+------------------+--------------------------------------------+----------
+            Total |       374      3,619         86         61 |     4,140 
+
+.    
+. // Generate indicator of NEUROBIOLOGICAL CONCEPTION of mental illness
+. // As per the 2010 paper: "Coded 1 if the respondent labeled the problem 
+. // as mental illness and attributed cause to a chemical imbalance or a 
+. // genetic problem, coded 0 otherwise"
+.  
+. g neurob = 1 if mentlillR == 1 & (imbalnceR == 1 | geneticsR == 1)
+(2,060 missing values generated)
+
+. replace neurob = 0 if mentlillR == 0 | (imbalnceR == 0 & geneticsR == 0)
+(1,909 real changes made)
+
+.         la var neurob "Neurobiological conception" 
+
+. 
+. // recode TREATMENT ENDORSEMENT 
+. // Yes = 1, no / don't know = 0
+. 
+. unab vars: meddoc mentldoc mentlhos rxmed mustdoc mustmed musthosp dangroth da
+> ngrslf
+
+. foreach v in `vars' {
+  2.         g `v'R = `v'
+  3.         recode `v'R (1=1) (2=0) (.d=0)
+  4.         }
+(242 missing values generated)
+(778 changes made to meddocR)
+(309 missing values generated)
+(941 changes made to mentldocR)
+(428 missing values generated)
+(2600 changes made to mentlhosR)
+(376 missing values generated)
+(1486 changes made to rxmedR)
+(309 missing values generated)
+(2654 changes made to mustdocR)
+(315 missing values generated)
+(2930 changes made to mustmedR)
+(322 missing values generated)
+(2623 changes made to musthospR)
+(225 missing values generated)
+(312 changes made to dangrothR)
+(237 missing values generated)
+(461 changes made to dangrslfR)
+
+.         
+. // recode PUBLIC STIGMA
+. // Definitely unwilling/probably unwilling = 1, 
+. // definitely unwilling, don't know = 0
+. 
+. la de unwilling 1 "1=Unwilling" 0 "0=Willing" `miss'
+
+. unab vars: vignei vigsoc vigfrnd vigwork viggrp vigmar
+
+. foreach v in `vars' {
+  2.     g `v'R = `v'
+  3.     recode `v'R (1/2=0) (3/4=1) (.d=0)
+  4.     la val `v'R unwilling
+  5.     local varlbl : variable label `v' 
+  6.     la var `v'R "Bin: `varlbl'" 
+  7.     ta `v' `v'R , m
+  8.    }  
+(281 missing values generated)
+(3985 changes made to vigneiR)
+
+                     |    Bin: how willing r would have x as a
+ how willing r would |                  neighbor
+have x as a neighbor | 0=Willing  1=Unwilli         .i         .n |     Total
+---------------------+--------------------------------------------+----------
+  definitely willing |       722          0          0          0 |       722 
+    probably willing |     1,841          0          0          0 |     1,841 
+  probably unwilling |         0        830          0          0 |       830 
+definitely unwilling |         0        466          0          0 |       466 
+           DONT KNOW |       126          0          0          0 |       126 
+                 IAP |         0          0         86          0 |        86 
+                  NA |         0          0          0         69 |        69 
+---------------------+--------------------------------------------+----------
+               Total |     2,689      1,296         86         69 |     4,140 
+(239 missing values generated)
+(3986 changes made to vigsocR)
+
+ how willing r would |     Bin: how willing r would spend time
+          spend time |             socializing with x
+  socializing with x | 0=Willing  1=Unwilli         .i         .n |     Total
+---------------------+--------------------------------------------+----------
+  definitely willing |       653          0          0          0 |       653 
+    probably willing |     1,657          0          0          0 |     1,657 
+  probably unwilling |         0        972          0          0 |       972 
+definitely unwilling |         0        619          0          0 |       619 
+           DONT KNOW |        85          0          0          0 |        85 
+                 IAP |         0          0         86          0 |        86 
+                  NA |         0          0          0         68 |        68 
+---------------------+--------------------------------------------+----------
+               Total |     2,395      1,591         86         68 |     4,140 
+(258 missing values generated)
+(3984 changes made to vigfrndR)
+
+                     | Bin: how willing r would make friends with
+ how willing r would |                      x
+ make friends with x | 0=Willing  1=Unwilli         .i         .n |     Total
+---------------------+--------------------------------------------+----------
+  definitely willing |       786          0          0          0 |       786 
+    probably willing |     1,958          0          0          0 |     1,958 
+  probably unwilling |         0        762          0          0 |       762 
+definitely unwilling |         0        376          0          0 |       376 
+           DONT KNOW |       102          0          0          0 |       102 
+                 IAP |         0          0         86          0 |        86 
+                  NA |         0          0          0         70 |        70 
+---------------------+--------------------------------------------+----------
+               Total |     2,846      1,138         86         70 |     4,140 
+(297 missing values generated)
+(3986 changes made to vigworkR)
+
+ how willing r would | Bin: how willing r would work closely with
+ work closely with x |                 x on a job
+            on a job | 0=Willing  1=Unwilli         .i         .n |     Total
+---------------------+--------------------------------------------+----------
+  definitely willing |       445          0          0          0 |       445 
+    probably willing |     1,267          0          0          0 |     1,267 
+  probably unwilling |         0      1,179          0          0 |     1,179 
+definitely unwilling |         0        952          0          0 |       952 
+           DONT KNOW |       143          0          0          0 |       143 
+                 IAP |         0          0         86          0 |        86 
+                  NA |         0          0          0         68 |        68 
+---------------------+--------------------------------------------+----------
+               Total |     1,855      2,131         86         68 |     4,140 
+(312 missing values generated)
+(3980 changes made to viggrpR)
+
+ how willing r would | Bin: how willing r would have a group home
+   have a group home |                    for x
+               for x | 0=Willing  1=Unwilli         .i         .n |     Total
+---------------------+--------------------------------------------+----------
+  definitely willing |       808          0          0          0 |       808 
+    probably willing |     1,664          0          0          0 |     1,664 
+  probably unwilling |         0        808          0          0 |       808 
+definitely unwilling |         0        548          0          0 |       548 
+           DONT KNOW |       152          0          0          0 |       152 
+                 IAP |         0          0         86          0 |        86 
+                  NA |         0          0          0         74 |        74 
+---------------------+--------------------------------------------+----------
+               Total |     2,624      1,356         86         74 |     4,140 
+(372 missing values generated)
+(3977 changes made to vigmarR)
+
+ how willing r would |  Bin: how willing r would have x marry in
+ have x marry in r's |                 r's family
+              family | 0=Willing  1=Unwilli         .i         .n |     Total
+---------------------+--------------------------------------------+----------
+  definitely willing |       350          0          0          0 |       350 
+    probably willing |     1,047          0          0          0 |     1,047 
+  probably unwilling |         0      1,188          0          0 |     1,188 
+definitely unwilling |         0      1,183          0          0 |     1,183 
+           DONT KNOW |       209          0          0          0 |       209 
+                 IAP |         0          0         86          0 |        86 
+                  NA |         0          0          0         77 |        77 
+---------------------+--------------------------------------------+----------
+               Total |     1,606      2,371         86         77 |     4,140 
+
+. 
+. unab vars: hurtself hurtoth
+
+. foreach v in `vars' {
+  2.         g `v'R = `v'
+  3.         recode `v'R (1/2=1) (3/4=0) (.d=0)
+  4.         }
+(331 missing values generated)
+(3013 changes made to hurtselfR)
+(365 missing values generated)
+(3481 changes made to hurtothR)
+
+.         
+. // recode CONTACT
+. local contact "evmhp mhdiagno diagnosd mhtreatd"
+
+. local contact "`contact' knwmhosp knwpatnt"
+
+. 
+. fre `contact'
+
+evmhp -- ever had mental health problem 
+-----------------------------------------------------------------
+                    |      Freq.    Percent      Valid       Cum.
+--------------------+--------------------------------------------
+Valid   1  yes      |         76       1.84       7.22       7.22
+        2  no       |        977      23.60      92.78     100.00
+        Total       |       1053      25.43     100.00           
+Missing .a NA       |         13       0.31                      
+        .i IAP      |       3073      74.23                      
+        .n NOT SURE |          1       0.02                      
+        Total       |       3087      74.57                      
+Total               |       4140     100.00                      
+-----------------------------------------------------------------
+
+mhdiagno -- r knows someone who has been diagnosed with a mental health problem
+-------------------------------------------------------------------
+                      |      Freq.    Percent      Valid       Cum.
+----------------------+--------------------------------------------
+Valid   1  yes        |        597      14.42      52.83      52.83
+        2  no         |        533      12.87      47.17     100.00
+        Total         |       1130      27.29     100.00           
+Missing .d Don't know |          6       0.14                      
+        .i IAP        |       2967      71.67                      
+        .n No answer  |         37       0.89                      
+        Total         |       3010      72.71                      
+Total                 |       4140     100.00                      
+-------------------------------------------------------------------
+
+diagnosd -- r ever diagnosed with mh problem
+-------------------------------------------------------------------
+                      |      Freq.    Percent      Valid       Cum.
+----------------------+--------------------------------------------
+Valid   1  yes        |        197       4.76      17.39      17.39
+        2  no         |        936      22.61      82.61     100.00
+        Total         |       1133      27.37     100.00           
+Missing .d Don't know |          5       0.12                      
+        .i IAP        |       2967      71.67                      
+        .n No answer  |         35       0.85                      
+        Total         |       3007      72.63                      
+Total                 |       4140     100.00                      
+-------------------------------------------------------------------
+
+mhtreatd -- r ever treated for mh problem
+------------------------------------------------------------------
+                     |      Freq.    Percent      Valid       Cum.
+---------------------+--------------------------------------------
+Valid   1  yes       |        187       4.52      94.92      94.92
+        2  no        |         10       0.24       5.08     100.00
+        Total        |        197       4.76     100.00           
+Missing .i IAP       |       3908      94.40                      
+        .n No answer |         35       0.85                      
+        Total        |       3943      95.24                      
+Total                |       4140     100.00                      
+------------------------------------------------------------------
+
+knwmhosp -- know anyone who was in a hospital 
+-----------------------------------------------------------------
+                    |      Freq.    Percent      Valid       Cum.
+--------------------+--------------------------------------------
+Valid   1  yes      |        366       8.84      50.76      50.76
+        2  no       |        355       8.57      49.24     100.00
+        Total       |        721      17.42     100.00           
+Missing .a NA       |          7       0.17                      
+        .i IAP      |       3404      82.22                      
+        .n NOT SURE |          8       0.19                      
+        Total       |       3419      82.58                      
+Total               |       4140     100.00                      
+-----------------------------------------------------------------
+
+knwpatnt -- known anyone seeing a psychologist etc? 
+------------------------------------------------------------------
+                     |      Freq.    Percent      Valid       Cum.
+---------------------+--------------------------------------------
+Valid   1  yes       |        388       9.37      58.88      58.88
+        2  no        |        271       6.55      41.12     100.00
+        Total        |        659      15.92     100.00           
+Missing .d DONT KNOW |         11       0.27                      
+        .i IAP       |       3404      82.22                      
+        .n NA        |         66       1.59                      
+        Total        |       3481      84.08                      
+Total                |       4140     100.00                      
+------------------------------------------------------------------
+
+. 
+. foreach v in `contact' {
+  2.         di in red ". tab year `v', m"
+  3.         tab year `v', m
+  4.         }
+. tab year evmhp, m
+
+   Year of |            ever had mental health problem 
+       GSS |       yes         no         NA        IAP   NOT SURE |     Total
+-----------+-------------------------------------------------------+----------
+      1996 |        76        977         13        377          1 |     1,444 
+      2006 |         0          0          0      1,523          0 |     1,523 
+      2018 |         0          0          0      1,173          0 |     1,173 
+-----------+-------------------------------------------------------+----------
+     Total |        76        977         13      3,073          1 |     4,140 
+. tab year mhdiagno, m
+
+           |  r knows someone who has been diagnosed with a mental
+   Year of |                     health problem
+       GSS |       yes         no  Don't kno        IAP  No answer |     Total
+-----------+-------------------------------------------------------+----------
+      1996 |         0          0          0      1,444          0 |     1,444 
+      2006 |         0          0          0      1,523          0 |     1,523 
+      2018 |       597        533          6          0         37 |     1,173 
+-----------+-------------------------------------------------------+----------
+     Total |       597        533          6      2,967         37 |     4,140 
+. tab year diagnosd, m
+
+   Year of |            r ever diagnosed with mh problem
+       GSS |       yes         no  Don't kno        IAP  No answer |     Total
+-----------+-------------------------------------------------------+----------
+      1996 |         0          0          0      1,444          0 |     1,444 
+      2006 |         0          0          0      1,523          0 |     1,523 
+      2018 |       197        936          5          0         35 |     1,173 
+-----------+-------------------------------------------------------+----------
+     Total |       197        936          5      2,967         35 |     4,140 
+. tab year mhtreatd, m
+
+   Year of |        r ever treated for mh problem
+       GSS |       yes         no        IAP  No answer |     Total
+-----------+--------------------------------------------+----------
+      1996 |         0          0      1,444          0 |     1,444 
+      2006 |         0          0      1,523          0 |     1,523 
+      2018 |       187         10        941         35 |     1,173 
+-----------+--------------------------------------------+----------
+     Total |       187         10      3,908         35 |     4,140 
+. tab year knwmhosp, m
+
+   Year of |           know anyone who was in a hospital 
+       GSS |       yes         no         NA        IAP   NOT SURE |     Total
+-----------+-------------------------------------------------------+----------
+      1996 |       366        355          7        708          8 |     1,444 
+      2006 |         0          0          0      1,523          0 |     1,523 
+      2018 |         0          0          0      1,173          0 |     1,173 
+-----------+-------------------------------------------------------+----------
+     Total |       366        355          7      3,404          8 |     4,140 
+. tab year knwpatnt, m
+
+   Year of |        known anyone seeing a psychologist etc? 
+       GSS |       yes         no  DONT KNOW        IAP         NA |     Total
+-----------+-------------------------------------------------------+----------
+      1996 |       388        271         11        708         66 |     1,444 
+      2006 |         0          0          0      1,523          0 |     1,523 
+      2018 |         0          0          0      1,173          0 |     1,173 
+-----------+-------------------------------------------------------+----------
+     Total |       388        271         11      3,404         66 |     4,140 
+
+.         
+. // recode COMPETENCE
+. 
+. la de comp 1 "able" 0 "unable"
+
+. 
+. local vars "dectreat decmoney"
+
+. foreach v in `vars' {
+  2.     g `v'R = `v'
+  3.     recode `v'R (1/2=1) (3/4=0) (.d=0)
+  4.     la val `v'R comp
+  5.     local varlbl : variable label `v' 
+  6.     la var `v'R "Bin: `varlbl'" 
+  7.     ta `v' `v'R , m
+  8.    }    
+(230 missing values generated)
+(3103 changes made to dectreatR)
+
+  how able is x |
+      to decide |    Bin: how able is x to decide receive
+        receive |                  treatment
+      treatment |    unable       able         .i         .n |     Total
+----------------+--------------------------------------------+----------
+      very able |         0        892          0          0 |       892 
+  somewhat able |         0      1,366          0          0 |     1,366 
+  not very able |     1,123          0          0          0 |     1,123 
+not able at all |       529          0          0          0 |       529 
+      DONT KNOW |        85          0          0          0 |        85 
+            IAP |         0          0         86          0 |        86 
+             NA |         0          0          0         59 |        59 
+----------------+--------------------------------------------+----------
+          Total |     1,737      2,258         86         59 |     4,140 
+(267 missing values generated)
+(3121 changes made to decmoneyR)
+
+  how able is x |
+      to decide |  Bin: how able is x to decide managing own
+   managing own |                    money
+          money |    unable       able         .i         .n |     Total
+----------------+--------------------------------------------+----------
+      very able |         0        875          0          0 |       875 
+  somewhat able |         0      1,255          0          0 |     1,255 
+  not very able |     1,150          0          0          0 |     1,150 
+not able at all |       593          0          0          0 |       593 
+      DONT KNOW |       123          0          0          0 |       123 
+            IAP |         0          0         86          0 |        86 
+             NA |         0          0          0         58 |        58 
+----------------+--------------------------------------------+----------
+          Total |     1,866      2,130         86         58 |     4,140 
+
+. 
+. // Recode DEMOGRAPHICS
+. 
+. // Sex
+. 
+. g female = (sex==2) if sex < .
+
+. la var female "Female?"
+
+. la value female yesno
+
+. ta sex female , m
+
+respondent |        Female?
+     s sex |      0=no      1=yes |     Total
+-----------+----------------------+----------
+      male |     1,880          0 |     1,880 
+    female |         0      2,260 |     2,260 
+-----------+----------------------+----------
+     Total |     1,880      2,260 |     4,140 
+
+.   
+. // Race
+. 
+. g white = (race == 1) if race < .
+
+. la var white "White?"
+
+. la val white yesno
+
+. ta race white, m
+
+   race of |        White?
+respondent |      0=no      1=yes |     Total
+-----------+----------------------+----------
+     white |         0      3,113 |     3,113 
+     black |       617          0 |       617 
+     other |       410          0 |       410 
+-----------+----------------------+----------
+     Total |     1,027      3,113 |     4,140 
+
+.  
+. // Education 
+. // The piece in AJP is a bit vague on the coding (in one place it says
+. // "at least a high school degree" and in another it says "greater than
+. // a high school degree". The descriptives suggest the latter is correct.
+.   
+. g ed_gths = 1 if degree > 1 & degree <= 4 
+(2,674 missing values generated)
+
+. replace ed_gths = 0 if degree <= 1 & degree >= 0
+(2,669 real changes made)
+
+. 
+. 
+. // The original paper DID NOT make adjustments for sample design, other
+. // than correcting for differential sampling probabilities. It's likely the 
+. // SEs are too small as a result.
+.         
+. svyset [pw=wtssall]
+
+Sampling weights: wtssall
+             VCE: linearized
+     Single unit: missing
+        Strata 1: <one>
+ Sampling unit 1: <observations>
+           FPC 1: <zero>
+
+. 
+. g y96 = year == 1996
+
+. g y06 = year == 2006
+
+. g y18 = year == 2018
+
+. 
+. 
+. 
+. ****************************************************************
+. // 
+. // close out
+. **************************************************************** 
+.         save "_data/gss-data00-import.dta", replace
+(file _data/gss-data00-import.dta not found)
+file _data/gss-data00-import.dta saved
+
+.         log close
+      name:  <unnamed>
+       log:  /Users/biancamanago/Dropbox/_AcademicWork/Vault/Research/- PUBLISHE
+> D/GSS-Health Affair Analyses/- posted/Analyses/gss-data00-import.log
+  log type:  text
+ closed on:  23 Dec 2021, 19:51:09
+--------------------------------------------------------------------------------
