@@ -14,7 +14,8 @@
 <hr/> 
 
 ## Statistical Replication Files
-&nbsp;&nbsp;&nbsp; Here are all of the statistical replication files for the manuscript. Currently available in Stata. Importantly, the data file from GSS was too large to import. Simply use the [1972-2018 download from GSS](https://gssdataexplorer.norc.org/) to start from the beginning. Otherwise, begin with our second data file.
+&nbsp;&nbsp;&nbsp; Here are all of the statistical replication files for the manuscript. Currently available in Stata. <br>
+&nbsp;&nbsp;&nbsp; Importantly, the data file from GSS was too large to upload. To start from the beginning, imply use the [1972-2018 download from GSS](https://gssdataexplorer.norc.org/). Otherwise, begin with our second data file.
 
 &nbsp;&nbsp;&nbsp; [work.zip](https://github.com/biancamanago/gss-2019-HA-ReplicationFiles/blob/067b192c8b725b6307091cd3d84a292602f64cd4/work.zip)
 
