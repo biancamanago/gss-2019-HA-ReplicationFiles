@@ -19,6 +19,8 @@ Importantly, the data file from GSS was too large to upload. To start from the b
 use the [1972-2018 download from GSS](https://gssdataexplorer.norc.org/). <br>
 Otherwise, begin with our second data file. (data00-import)
 
+<i> Note, when transposing our Figure 2 from our file (see what we provided) to the manuscript, the copy editors misinterpreted the effect sizes, changing 10 percent (.1) to 1 percent (.01). Unfortunately we didn't catch this in the final review of the manuscript, but there was an errata published. </i>
+
 &nbsp;&nbsp;&nbsp; [work.zip](https://github.com/biancamanago/gss-2019-HA-ReplicationFiles/blob/067b192c8b725b6307091cd3d84a292602f64cd4/work.zip)
 
 <hr/> 
